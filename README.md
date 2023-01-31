@@ -1,5 +1,2 @@
 # Projet-Int-gration
-yooooo
-aaaaaaa
-hey
-a
+Projet de neural network have fun
