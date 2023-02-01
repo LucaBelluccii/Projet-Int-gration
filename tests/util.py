@@ -1,13 +1,16 @@
 import numpy as np
 from tkinter import *
 
-
+#fonction d'activation 
+#retourne x si x>0 sinon 0
 def relu(x):
     return max(0,x)
 
+#convertir des valeurs rgb en hexadécimal
 def rgb2hex(r,g,b):
     return f'#{r:02x}{g:02x}{b:02x}'
 
+#affiche un network
 def showNetwork(network,width,height,window):
     canvas = Canvas(window,width = width, height = height,background="black")
     rows = len(network.layers)
@@ -32,11 +35,11 @@ def showNetwork(network,width,height,window):
     
     canvas.pack()
 
-
+#passe une liste input dans le network et retourne les outputs
 def feedforward(network,inputs):
-    input_layer= network.layers[0]
-    output = input_layer.feedforward(inputs)
-    for i in range(len(network.layers)-2):
+    input_layer= network.layers[0]  #prendre le premier layer
+    output = input_layer.feedforward(inputs)    #passer les données input dans le premier layer
+    for i in range(len(network.layers)-2):  #répéter pour les autres layers
         output = network.layers[i+1].feedforward(output)
     output = [relu(x) for x in output]
     return output

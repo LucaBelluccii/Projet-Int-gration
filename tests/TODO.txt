@@ -1,0 +1,2 @@
+-ajouter sofmax
+-changer le dernier layer des networks
