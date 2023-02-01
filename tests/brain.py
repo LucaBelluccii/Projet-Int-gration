@@ -11,6 +11,9 @@ class Network:
             self.layers.append(Layer(neuronCounts[i],neuronCounts[i+1]))
             print(self.layers[i].biases)
         self.layers.append(Layer(neuronCounts[-1],neuronCounts[-1]))
+    
+    
+    
 class Layer:
     def __init__(self,neuronCount,outputs,activation="relu"):
         self.weights = []
@@ -27,7 +30,7 @@ class Layer:
 
 
 
-net = Network([5,10,10])
+net = Network([784,128,128,10])
 window = tk.Tk()
 window.resizable(False,False)
 

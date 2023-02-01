@@ -10,7 +10,7 @@ def rgb2hex(r,g,b):
 def showNetwork(network,width,height,window):
     canvas = Canvas(window,width = width, height = height,background="black")
     rows = len(network.layers)
-    neuronDim = 25
+    neuronDim = 5
     
     for i in range(rows-1):
         for j in range(len(network.layers[i].weights)):
