@@ -9,7 +9,7 @@ class Network:
         self.layers = []
         for i in range(len(neuronCounts)-1):
             self.layers.append(Layer(neuronCounts[i],neuronCounts[i+1]))
-            print(self.layers[i].biases)
+           
         self.layers.append(Layer(neuronCounts[-1],neuronCounts[-1]))
     
     
@@ -22,22 +22,30 @@ class Layer:
         #activation function
         self.activation = util.relu
         
-        
         for i in range(neuronCount):
             self.weights.append([r.random()*2-1 for j in range(outputs)])
         for i in range(neuronCount):
             self.biases.append(r.randint(0,5))
 
+    def feedforward(self,inputs):
+        outputs = np.zeros(len(self.weights[0]))
+        for i,input in enumerate(inputs):
+            input -= self.biases[i]
+            input = self.activation(input)
+            for j in range(len(outputs)):
+                outputs[j]+= input*self.weights[i][j]
+        return outputs
+                
 
 
-net = Network([784,128,128,10])
+net = Network([16,32,32,16])
 window = tk.Tk()
 window.resizable(False,False)
 
 util.showNetwork(net,1000,1000,window)
 
-
-
+test = [r.randint(0,5) for i in range(16)]
+print(util.feedforward(net,test))
 window.mainloop()
 
 

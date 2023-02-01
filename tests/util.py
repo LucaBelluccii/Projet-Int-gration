@@ -1,6 +1,7 @@
 import numpy as np
 from tkinter import *
 
+
 def relu(x):
     return max(0,x)
 
@@ -30,3 +31,12 @@ def showNetwork(network,width,height,window):
             canvas.create_oval(x,y,x+neuronDim,y+neuronDim,fill = "blue")
     
     canvas.pack()
+
+
+def feedforward(network,inputs):
+    input_layer= network.layers[0]
+    output = input_layer.feedforward(inputs)
+    for i in range(len(network.layers)-2):
+        output = network.layers[i+1].feedforward(output)
+    output = [relu(x) for x in output]
+    return output
