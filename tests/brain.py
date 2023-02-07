@@ -17,7 +17,7 @@ class Network:
         outputs = self.layers[0].feedforward(inputs)
         for i in range(1,len(self.layers)):
             outputs = self.layers[i].feedforward(outputs)
-        return util.normalise(outputs)
+        return util.softmax(outputs)
     
 #Classe des Layers des réseaux
 class Layer:
@@ -50,21 +50,24 @@ class Layer:
         return output       
 
 #code pour tests
-net = Network([16,32,32,10])
+net = Network([16,32,32,4])
 window = tk.Tk()
 window.resizable(False,False)
 
 util.show(net,1000,1000,window)
 
+
+
 test = np.array([r.randint(0,5) for i in range(len(net.layers[0].weights[0]))])
 print(test.shape)
-print("normalised")
+print("outputs")
 print(net.feedforward(test))
+
 
 expectedoutput=np.zeros(len(net.layers[-1].weights))
 expectedoutput[0]=1
 print("cost")
-print(util.costfonction(util.normalise(net.feedforward(test)),expectedoutput))
+print(util.costfonction((net.feedforward(test)),expectedoutput))
 window.mainloop()
 
 

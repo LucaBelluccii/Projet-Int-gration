@@ -1,7 +1,7 @@
 import numpy as np
 import math as m
 from tkinter import *
-
+import decimal
 
 #fonction d'activation 
 #retourne x si x>0 sinon 0
@@ -70,7 +70,7 @@ def show(network,width,height,window):
        
 
 #Somme normalisé pour le output
-def normalise(output):
+def softmax(output):
     newoutput=[]
     tot=0
     for x in output:
@@ -82,8 +82,9 @@ def normalise(output):
 
 #final cost fonction
 def costfonction(output,expectedoutput):
+    
     tot=0
-    for i in range(len(output)-1):
-        tot+=((output[i]-expectedoutput[i])**2)
+    for i in range(len(output)):
+        tot+=(((output[i])-(expectedoutput[i]))**(2))
         
     return tot
