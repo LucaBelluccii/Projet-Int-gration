@@ -14,35 +14,58 @@ def rgb2hex(r,g,b):
 def showNetwork(network,width,height,window):
     canvas = Canvas(window,width = width, height = height,background="black")
     rows = len(network.layers)
-    neuronDim = 5
+    neuronDim = 20
     
-    for i in range(rows-1):
-        for j in range(len(network.layers[i].weights)):
+    for i in range(rows):
+        for j in range(len(network.layers[i].weights[0])):
             x1 = (i)*((width)/rows)+50+neuronDim/2
             y1 = (j)*((height)/len(network.layers[i].weights))+15+neuronDim/2
             x2 = (i+1)*((width)/rows)+50+neuronDim/2
-            for k in range(len(network.layers[i+1].biases)):
-                y2 = (k)*((height)/len(network.layers[i+1].biases))+15+neuronDim/2
+            for k in range(len(network.layers[i].weights)):
+                y2 = (k)*((height)/len(network.layers[i].biases))+15+neuronDim/2
                 
                 red = int(255*(abs(network.layers[i].weights[j][k])))
-                canvas.create_line(x1,y1,x2,y2,fill =rgb2hex(red,0,0))
-    
+                canvas.create_line(x2,y2,x1,y1,fill =rgb2hex(red,0,0))
+                
     for i in range(rows):
-        for j in range(len(network.layers[i].biases)):
+        for j in range(len(network.layers[i].weights[0])):
             x = (i)*((width)/rows)+50
-            y = (j)*((height)/len(network.layers[i].biases))+15
+            y = (j)*((height)/len(network.layers[i].weights[0]))+15
             canvas.create_oval(x,y,x+neuronDim,y+neuronDim,fill = "blue")
     
     canvas.pack()
-
-#passe une liste input dans le network et retourne les outputs
-def feedforward(network,inputs):
-    input_layer= network.layers[0]  #prendre le premier layer
-    output = input_layer.feedforward(inputs)    #passer les données input dans le premier layer
-    for i in range(len(network.layers)-2):  #répéter pour les autres layers
-        output = network.layers[i+1].feedforward(output)
-    output = [relu(x) for x in output]
-    return output
+def show(network,width,height,window):
+    canvas = Canvas(window,width = width, height = height,background="black")
+    neuronSize = 10
+    margin = 20
+    xstep = (width-margin*2)/(len(network.layers))
+    
+    for i,layer in enumerate(network.layers):
+        x1 = i*(xstep)+margin+neuronSize/2
+        x2 = (i+1)*xstep+margin+neuronSize/2
+        inputStep = (height-margin*2)/len(layer.weights[0])
+        outputStep = (height-margin*2)/len(layer.weights)
+        for j in range(len(layer.weights[0])):
+            y1 = j*inputStep+margin+neuronSize/2
+            for k in range(len(layer.weights)):
+                y2 = k*outputStep+margin+neuronSize/2
+                red = int(255*abs(layer.weights[k][j]))
+                canvas.create_line(x1,y1,x2,y2,fill =rgb2hex(red,0,0))
+                
+                
+    for i,layer in enumerate(network.layers):
+        x1 = i*(xstep)+margin
+        x2 = (i+1)*xstep+margin
+        inputStep = (height-margin*2)/len(layer.weights[0])
+        outputStep = (height-margin*2)/len(layer.weights)
+        for j in range(len(layer.weights[0])):
+            y1 = j*inputStep+margin
+            canvas.create_oval(x1,y1,x1+neuronSize,y1+neuronSize,fill = "blue")
+        for k in range(len(layer.weights)):
+            y1 = k*outputStep+margin
+            canvas.create_oval(x2,y1,x2+neuronSize,y1+neuronSize,fill = "blue")
+    canvas.pack()
+       
 
 #Somme normalisé pour le output
 def normalise(output):
