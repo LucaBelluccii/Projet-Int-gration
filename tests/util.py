@@ -1,5 +1,7 @@
 import numpy as np
+import math as m
 from tkinter import *
+
 
 #fonction d'activation 
 #retourne x si x>0 sinon 0
@@ -70,11 +72,15 @@ def show(network,width,height,window):
 #Somme normalisé pour le output
 def normalise(output):
     newoutput=[]
-    tot=sum(output)
+    tot=0
     for x in output:
-        newoutput.append(x/tot)
+        tot+=m.e**x
+    
+    for x in output:
+        newoutput.append(m.e**x/tot)
     return newoutput
 
+#final cost fonction
 def costfonction(output,expectedoutput):
     tot=0
     for i in range(len(output)-1):
