@@ -18,6 +18,13 @@ class Network:
         for i in range(1,len(self.layers)):
             outputs = self.layers[i].feedforward(outputs)
         return util.softmax(outputs)
+    def evaluate(self,xTest,yTest):
+        cost = 0
+        for i,test in enumerate(xTest):
+            output = self.feedforward(test)
+            cost += util.costfonction(output,yTest[i])
+        return cost
+    
     
 #Classe des Layers des réseaux
 class Layer:
