@@ -53,7 +53,13 @@ window.resizable(False,False)
 util.showNetwork(net,1000,1000,window)
 
 test = [r.randint(0,5) for i in range(16)]
+print("original")
 print(util.feedforward(net,test))
+print("norm")
+print(util.normalise(util.feedforward(net,test)))
+expectedoutput=[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+print("cost")
+print(util.costfonction(util.normalise(util.feedforward(net,test)),expectedoutput))
 window.mainloop()
 
 

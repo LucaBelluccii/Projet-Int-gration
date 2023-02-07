@@ -43,3 +43,18 @@ def feedforward(network,inputs):
         output = network.layers[i+1].feedforward(output)
     output = [relu(x) for x in output]
     return output
+
+#Somme normalisé pour le output
+def normalise(output):
+    newoutput=[]
+    tot=sum(output)
+    for x in output:
+        newoutput.append(x/tot)
+    return newoutput
+
+def costfonction(output,expectedoutput):
+    tot=0
+    for i in range(len(output)-1):
+        tot+=((output[i]-expectedoutput[i])**2)
+        
+    return tot
