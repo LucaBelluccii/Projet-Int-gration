@@ -12,30 +12,10 @@ def relu(x):
 def rgb2hex(r,g,b):
     return f'#{r:02x}{g:02x}{b:02x}'
 
-#affiche un network
-def showNetwork(network,width,height,window):
-    canvas = Canvas(window,width = width, height = height,background="black")
-    rows = len(network.layers)
-    neuronDim = 20
+def lerp(a,b,t):
+    return a+t*(b-a)
     
-    for i in range(rows):
-        for j in range(len(network.layers[i].weights[0])):
-            x1 = (i)*((width)/rows)+50+neuronDim/2
-            y1 = (j)*((height)/len(network.layers[i].weights))+15+neuronDim/2
-            x2 = (i+1)*((width)/rows)+50+neuronDim/2
-            for k in range(len(network.layers[i].weights)):
-                y2 = (k)*((height)/len(network.layers[i].biases))+15+neuronDim/2
-                
-                red = int(255*(abs(network.layers[i].weights[j][k])))
-                canvas.create_line(x2,y2,x1,y1,fill =rgb2hex(red,0,0))
-                
-    for i in range(rows):
-        for j in range(len(network.layers[i].weights[0])):
-            x = (i)*((width)/rows)+50
-            y = (j)*((height)/len(network.layers[i].weights[0]))+15
-            canvas.create_oval(x,y,x+neuronDim,y+neuronDim,fill = "blue")
-    
-    canvas.pack()
+#affiche le network dans une fenetre tkinter
 def show(network,width,height,window):
     canvas = Canvas(window,width = width, height = height,background="black")
     neuronSize = 10
@@ -81,7 +61,7 @@ def softmax(output):
     return newoutput
 
 #final cost fonction
-def costfonction(output,expectedoutput):
+def loss(output,expectedoutput):
     
     tot=0
     for i in range(len(output)):

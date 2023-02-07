@@ -1,80 +1,93 @@
 import numpy as np
-import util
+from util import *
 import random as r
-
+import copy
 import tkinter as tk
 
-#Classe des neural networks
+# Classe des neural networks
 class Network:
-    #constructeur, prends une liste contenant les nombres de neurones pour chaque layer
-    def __init__(self,neuronCounts):
-        self.layers = []    #liste des layers
-        for i in range(len(neuronCounts)-1):    #ajouter tout les layers sauf le dernier
-            self.layers.append(Layer(neuronCounts[i],neuronCounts[i+1]))
-           
-        #self.layers.append(Layer(neuronCounts[-1],neuronCounts[-1]))    #ajouter le dernier layer
-    def feedforward(self,inputs):
-        outputs = self.layers[0].feedforward(inputs)
-        for i in range(1,len(self.layers)):
-            outputs = self.layers[i].feedforward(outputs)
-        return util.softmax(outputs)
-    def evaluate(self,xTest,yTest):
+    # constructeur, prends une liste contenant les nombres de neurones pour chaque layer
+    def __init__(self, neuronCounts):
+        self.layers = []  # liste des layers
+        for i in range(len(neuronCounts)-1):  # ajouter tout les layers sauf le dernier
+            self.layers.append(Layer(neuronCounts[i], neuronCounts[i+1]))
+
+    # passe une liste de données input et retourne le output du modele    
+    def feedforward(self, inputs):
+        outputs = self.layers[0].feedforward(inputs)    #output du premier layer
+        for i in range(1, len(self.layers)):    #appliquer au reste des layers
+            outputs = self.layers[i].feedforward(outputs)   
+        return softmax(outputs)    #appliquer softmax au outputs finaux
+
+    def evaluate(self, xTest, yTest):
         cost = 0
-        for i,test in enumerate(xTest):
+        for i, test in enumerate(xTest):
             output = self.feedforward(test)
-            cost += util.costfonction(output,yTest[i])
-        return cost
+            cost += loss(output, yTest[i])
+        return cost/len(xTest)
     
-    
-#Classe des Layers des réseaux
+    def mutate(self,mutationFactor):
+        for layer in self.layers:
+            for i in range(len(layer.weights)):
+                for j in range(len(layer.weights[i])):
+                    layer.weights[i][j] = lerp(layer.weights[i][j]+mutationFactor,layer.weights[i][j]-mutationFactor,r.random()) 
+            for i in range(len(layer.biases)):
+                layer.biases[i] = lerp(layer.biases[i]-mutationFactor,layer.biases[i]+mutationFactor,r.random)  
+    def getClone(self):
+        return copy.deepcopy(self)
+
+
+# Classe des Layers des réseaux
 class Layer:
-    #constructeur
-    #args
-    #neuronCount -> int, nombre de neurones du layer
-    #outputs -> int nombre de neurones du prochain layer
-    #activation -> string, nom de la fonction d'activation désirée
-    def __init__(self,inputCount,outputCount,activation="relu"):
-        self.weights = []   #liste des weights[j][i] ou i correspond au neuron input et j aux outputs
-        self.biases = []    #liste des biais
-        
-        #activation function
-        self.activation = util.relu
-        
-        for i in range(outputCount):    #initialiser des weights aléatoires
+    # constructeur
+    # args
+    # neuronCount -> int, nombre de neurones du layer
+    # outputs -> int nombre de neurones du prochain layer
+    # activation -> string, nom de la fonction d'activation désirée
+    def __init__(self, inputCount, outputCount, activation="relu"):
+        self.weights = []  # liste des weights[j][i] ou i correspond au neuron input et j aux outputs
+        self.biases = []  # liste des biais
+
+        # activation function
+        self.activation = relu
+
+        for i in range(outputCount):  # initialiser des weights aléatoires
             self.weights.append([r.random()*2-1 for j in range(inputCount)])
-        for i in range(outputCount):    #initialiser des biais aléatoires
-            self.biases.append(r.randint(0,5))
-        
-        #convertir les listes en numpy array
-        self.weights = np.array(self.weights)   
+        for i in range(outputCount):  # initialiser des biais aléatoires
+            self.biases.append(r.randint(0, 5))
+
+        # convertir les listes en numpy array
+        self.weights = np.array(self.weights)
         self.biases = np.array(self.biases)
 
-    #passe une liste input dans le layer et retourne le output
-    def feedforward(self,inputs):   
-        output = np.matmul(self.weights,inputs) #produit matriciel input*weights
-        output = np.add(output,self.biases) #ajouter les biais
-        output = [self.activation(x) for x in output]   #appliquer la fonction d'activation
-        return output       
-
-#code pour tests
-net = Network([16,32,32,4])
-window = tk.Tk()
-window.resizable(False,False)
-
-util.show(net,1000,1000,window)
+    # passe une liste input dans le layer et retourne le output
+    def feedforward(self, inputs):
+        # produit matriciel input*weights
+        output = np.matmul(self.weights, inputs)
+        output = np.add(output, self.biases)  # ajouter les biais
+        # appliquer la fonction d'activation
+        output = [self.activation(x) for x in output]
+        return output
 
 
+if __name__=="__main__":
+    # code pour tests
+    net = Network([16, 32, 32, 4])
+    window = tk.Tk()
+    window.resizable(False, False)
 
-test = np.array([r.randint(0,5) for i in range(len(net.layers[0].weights[0]))])
-print(test.shape)
-print("outputs")
-print(net.feedforward(test))
-
-
-expectedoutput=np.zeros(len(net.layers[-1].weights))
-expectedoutput[0]=1
-print("cost")
-print(util.costfonction((net.feedforward(test)),expectedoutput))
-window.mainloop()
+    show(net, 1000, 1000, window)
 
 
+    test = np.array([r.randint(0, 5)
+                for i in range(len(net.layers[0].weights[0]))])
+    print(test.shape)
+    print("outputs")
+    print(net.feedforward(test))
+
+
+    expectedoutput = np.zeros(len(net.layers[-1].weights))
+    expectedoutput[0] = 1
+    print("cost")
+    print(loss((net.feedforward(test)), expectedoutput))
+    window.mainloop()
