@@ -51,14 +51,10 @@ def show(network,width,height,window):
 
 #Somme normalisé pour le output
 def softmax(output):
-    newoutput=[]
-    tot=0
-    for x in output:
-        tot+=m.e**x
-    
-    for x in output:
-        newoutput.append(m.e**x/tot)
-    return newoutput
+    output -= np.max(output)
+    output = np.exp(output)
+    output = output/np.sum(output)
+    return output
 
 #final cost fonction
 def loss(output,expectedoutput):

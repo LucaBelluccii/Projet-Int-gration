@@ -16,7 +16,7 @@ class Network:
     def feedforward(self, inputs):
         outputs = self.layers[0].feedforward(inputs)    #output du premier layer
         for i in range(1, len(self.layers)):    #appliquer au reste des layers
-            outputs = self.layers[i].feedforward(outputs)   
+            outputs = self.layers[i].feedforward(outputs)  
         return softmax(outputs)    #appliquer softmax au outputs finaux
 
     def evaluate(self, xTest, yTest):
@@ -30,9 +30,9 @@ class Network:
         for layer in self.layers:
             for i in range(len(layer.weights)):
                 for j in range(len(layer.weights[i])):
-                    layer.weights[i][j] = lerp(layer.weights[i][j]+mutationFactor,layer.weights[i][j]-mutationFactor,r.random()) 
+                    layer.weights[i][j] = lerp(layer.weights[i][j]+layer.weights[i][j]*mutationFactor,layer.weights[i][j]-layer.weights[i][j]*mutationFactor,r.random()) 
             for i in range(len(layer.biases)):
-                layer.biases[i] = lerp(layer.biases[i]-mutationFactor,layer.biases[i]+mutationFactor,r.random)  
+                layer.biases[i] = lerp(layer.biases[i]+layer.biases[i]*mutationFactor,layer.biases[i]-layer.biases[i]*mutationFactor,r.random())  
     def getClone(self):
         return copy.deepcopy(self)
 
@@ -41,8 +41,8 @@ class Network:
 class Layer:
     # constructeur
     # args
-    # neuronCount -> int, nombre de neurones du layer
-    # outputs -> int nombre de neurones du prochain layer
+    # inputCount -> int, nombre de inputs
+    # outputCounts -> int nombre de outputs
     # activation -> string, nom de la fonction d'activation désirée
     def __init__(self, inputCount, outputCount, activation="relu"):
         self.weights = []  # liste des weights[j][i] ou i correspond au neuron input et j aux outputs
@@ -53,8 +53,9 @@ class Layer:
 
         for i in range(outputCount):  # initialiser des weights aléatoires
             self.weights.append([r.random()*2-1 for j in range(inputCount)])
+            
         for i in range(outputCount):  # initialiser des biais aléatoires
-            self.biases.append(r.randint(0, 5))
+            self.biases.append(r.random()*5)
 
         # convertir les listes en numpy array
         self.weights = np.array(self.weights)
@@ -72,7 +73,7 @@ class Layer:
 
 if __name__=="__main__":
     # code pour tests
-    net = Network([16, 32, 32, 4])
+    net = Network([16, 16, 10])
     window = tk.Tk()
     window.resizable(False, False)
 

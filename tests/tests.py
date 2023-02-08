@@ -15,15 +15,18 @@ def generateData(dataSize,dataLen):
 
 
 
-input_layer_size = 10
+input_layer_size = 100
 dataSize = 1000
-
-number_of_networks = 500
-structure = [10,32,32,10]
-networks = [Network(structure) for i in range(number_of_networks)]
 
 xTrain,yTrain = generateData(dataSize,input_layer_size)
 print("generated data")
+
+number_of_networks = 10
+structure = [input_layer_size,128,128,128,input_layer_size]
+networks = [Network(structure) for i in range(number_of_networks)]
+print("networks generated")
+
+
 
 minCost = 99999
 minIndex = 0
