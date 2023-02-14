@@ -73,11 +73,11 @@ class Layer:
 
 if __name__=="__main__":
     # code pour tests
-    net = Network([16, 16, 10])
+    net = Network([16, 21,21, 10])
     window = tk.Tk()
     window.resizable(False, False)
 
-    show(net, 1000, 1000, window)
+    show(net, 700, 700, window)
 
 
     test = np.array([r.randint(0, 5)
