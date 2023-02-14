@@ -16,7 +16,7 @@ class Network:
     def feedforward(self, inputs):
         outputs = self.layers[0].feedforward(inputs)    #output du premier layer
         for i in range(1, len(self.layers)):    #appliquer au reste des layers
-            outputs = self.layers[i].feedforward(outputs)  
+            outputs = self.layers[i].feedforward(outputs)
         return softmax(outputs)    #appliquer softmax au outputs finaux
 
     def evaluate(self, xTest, yTest):
@@ -47,7 +47,7 @@ class Layer:
     def __init__(self, inputCount, outputCount, activation="relu"):
         self.weights = []  # liste des weights[j][i] ou i correspond au neuron input et j aux outputs
         self.biases = []  # liste des biais
-
+        self.outputs = [] # liste de outputs
         # activation function
         self.activation = relu
 
@@ -68,12 +68,13 @@ class Layer:
         output = np.add(output, self.biases)  # ajouter les biais
         # appliquer la fonction d'activation
         output = [self.activation(x) for x in output]
+        
         return output
 
 
 if __name__=="__main__":
     # code pour tests
-    net = Network([16, 21,21, 10])
+    net = Network([2, 3,3, 2])
     window = tk.Tk()
     window.resizable(False, False)
 
@@ -91,4 +92,9 @@ if __name__=="__main__":
     expectedoutput[0] = 1
     print("cost")
     print(loss((net.feedforward(test)), expectedoutput))
+    
+    
+    backpropfinal(net,test,expectedoutput)
+    
+    
     window.mainloop()

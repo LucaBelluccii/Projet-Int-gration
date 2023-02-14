@@ -82,26 +82,41 @@ def backpropfinal(network,x,y):
     #
     # ////////////
     #
-    # dZ/dWeight = a(l-1)
+    # dZ/dWeight = wei                       |a(l-1)
     #
     # ////////////
     # 
-    # dCost/dWeight= a(l-1) * (a(l)-y)
+    # dCost/dWeight= a(l-1) * (a(l)-y)//////// pas bon
+    
+    # error=
     
     #premiere derive
     a=[]
-    output=network.layers[0].feedfoward(x)
-    a.append(output)
+    output=network.layers[0].feedforward(x)
+    a.append(np.array(output))
     for i in range(1,len(network.layers)):
-        output=network.layers[i].feedfoward(output)
-        a.append(output)     
+        output=network.layers[i].feedforward(output)
+        a.append(np.array(output))     
 
-    a[-1]=softmax(a[-1])
     
-    a=np.array(a)
+    a[-1]=softmax(np.array(a[-1]))
+    
     y=np.array(y)
     
-    deriveout=a[-2]*(a[-1]-y)
+    
+    variations=[]
+    
+    ogerror=a[-1]-y
+    variations.append(ogerror)
+    for i in reversed(range(0,len(network.layers)-1)):
+        weights=np.transpose(network.layers[i+1].weights)
+        if (i==len(network.layers)-2) :
+            variations.append(np.matmul(weights,ogerror))
+        else :
+            variations.append(np.matmul(weights,variations[i-1]))
+    
+    print(variations)
+    #deriveout=a[-2]*(a[-1]-y)
     
     # goal: dCost/dWeightx
     #   dCost/dWeightx= x fois /(dZ/dWeightx dRelu/dZ * dWeight/dRelu)/ * dZ/dWeight * dRelu/dZ * dCost/dRelu
