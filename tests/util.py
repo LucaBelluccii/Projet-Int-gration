@@ -63,7 +63,7 @@ def loss(output,expectedoutput):
     for i in range(len(output)):
         tot+=(((output[i])-(expectedoutput[i]))**(2))
         
-    return tot
+    return tot/2
 
 #backprop
 def backpropfinal(network,x,y):
@@ -86,7 +86,7 @@ def backpropfinal(network,x,y):
     #
     # ////////////
     # 
-    # dCost/dWeight= a(l-1) * 2(a(l)-y)
+    # dCost/dWeight= a(l-1) * (a(l)-y)
     
     #premiere derive
     a=[]
@@ -101,7 +101,7 @@ def backpropfinal(network,x,y):
     a=np.array(a)
     y=np.array(y)
     
-    deriveout=a[-2]*2(a[-1]-y)
+    deriveout=a[-2]*(a[-1]-y)
     
     # goal: dCost/dWeightx
     #   dCost/dWeightx= x fois /(dZ/dWeightx dRelu/dZ * dWeight/dRelu)/ * dZ/dWeight * dRelu/dZ * dCost/dRelu
