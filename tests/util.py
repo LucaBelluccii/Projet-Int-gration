@@ -64,3 +64,50 @@ def loss(output,expectedoutput):
         tot+=(((output[i])-(expectedoutput[i]))**(2))
         
     return tot
+
+#backprop
+def backpropfinal(network,x,y):
+    # goal: dCost/dWeight
+    #   dCost/dWeight=dZ/dWeight * dRelu/dZ * dCost/dRelu
+    #
+    # a:output y: expected output w: weight b: bias
+    #
+    # ////////////
+    #
+    # dCost/dRelu = 2(a(l)-y)
+    #
+    # ////////////Z=w(l)a(l-1) + b(l)
+    #
+    # dRelu/dZ = 1
+    #
+    # ////////////
+    #
+    # dZ/dWeight = a(l-1)
+    #
+    # ////////////
+    # 
+    # dCost/dWeight= a(l-1) * 2(a(l)-y)
+    
+    #premiere derive
+    a=[]
+    output=network.layers[0].feedfoward(x)
+    a.append(output)
+    for i in range(1,len(network.layers)):
+        output=network.layers[i].feedfoward(output)
+        a.append(output)     
+
+    a[-1]=softmax(a[-1])
+    
+    a=np.array(a)
+    y=np.array(y)
+    
+    deriveout=a[-2]*2(a[-1]-y)
+    
+    # goal: dCost/dWeightx
+    #   dCost/dWeightx= x fois /(dZ/dWeightx dRelu/dZ * dWeight/dRelu)/ * dZ/dWeight * dRelu/dZ * dCost/dRelu
+    #
+    #   dWeight/dRelu = a(l-x-1) * 1 *
+    #
+    #
+    
+    #next derive
