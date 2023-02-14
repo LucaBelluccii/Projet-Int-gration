@@ -1,14 +1,14 @@
 import pygame as pg
 import math
 
-STEERING_ANGLE = 1
-ACCELERATION = 0.5
-DECCELERATION = 1.5
-MAX_VELOCITY = 5
+STEERING_ANGLE = 5
+ACCELERATION = 0.7
+DECCELERATION = 3
+MAX_VELOCITY = 12
 
-class Car(pg.sprite.Sprite):
+class Car:
     def __init__(self,x,y,width,height,imgPath):
-        pg.sprite.Sprite.__init__(self)
+        
         self.x = x
         self.y = y
         self.width = width
@@ -16,11 +16,14 @@ class Car(pg.sprite.Sprite):
 
         self.angle = 90
 
-        self.original_image = pg.image.load(imgPath).convert_alpha()
-        self.original_image = pg.transform.scale(self.original_image,(height,width))
+        
 
-        self.image = self.original_image.copy()
-        self.rect = self.image.get_rect(topleft = (x,y))
+        self.image = pg.image.load(imgPath).convert_alpha()
+        self.image = pg.transform.scale(self.image,(height,width))
+        self.rect = pg.Rect(x, y, height, width)
+        self.surface = pg.Surface((height, width),pg.SRCALPHA,32) 
+        self.surface.blit(self.image, (0, 0))
+
         
         
         self.inputs = [False,False,False,False]#gas,brake,left,rigth
@@ -42,7 +45,7 @@ class Car(pg.sprite.Sprite):
            self.angle +=STEERING_ANGLE
 
         
-        self.image = self.rotate()
+        
         
 
         self.clamp()
@@ -52,9 +55,7 @@ class Car(pg.sprite.Sprite):
         self.rect.topleft = (self.x,self.y)
 
         self.inputs = [False,False,False,False]
-    def rotate(self):
-        self.image = pg.transform.rotate(self.original_image,self.angle)
-        self.rect = self.image.get_rect(center = self.rect.center)    
+    
 
     def clamp(self):
         if self.vel<0:
@@ -63,5 +64,8 @@ class Car(pg.sprite.Sprite):
             self.vel = MAX_VELOCITY
 
     def draw(self,window):
-        print(self.image)
-        window.blit(self.image,self.rect)
+        self.rect.topleft = (int(self.x), int(self.y))
+        rotated = pg.transform.rotate(self.surface, -self.angle+180)
+        surface_rect = self.surface.get_rect(topleft = self.rect.topleft)
+        new_rect = rotated.get_rect(center = surface_rect.center)
+        window.blit(rotated, new_rect.topleft)

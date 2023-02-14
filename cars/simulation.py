@@ -1,19 +1,17 @@
 import pygame as pg
 import car
+import road
 
 pg.init()
 
-WIDTH,HEIGHT = 400,600
-
+WIDTH,HEIGHT = 600,600
 FPS = 20
-
 CLOCK = pg.time.Clock()
-
 WINDOW = pg.display.set_mode((WIDTH,HEIGHT))
-
 CAR_IMG_SRC = ".\\assets\\car.png"
 
-car = car.Car(50,50,30,50,CAR_IMG_SRC)
+car = car.Car(50,250,45,75,CAR_IMG_SRC)
+road = road.Road(3,10,390)
 
 WINDOW.fill((255,255,255))
 
@@ -41,6 +39,5 @@ while running:
     for e in pg.event.get():
         if e.type==pg.QUIT:
             running = False
-
 
     pg.display.flip()
