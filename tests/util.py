@@ -126,3 +126,16 @@ def backpropfinal(network,x,y):
     #
     
     #next derive
+
+def relu_vector(x):
+    return np.array([max(0,n) for n in x])
+
+
+def relu_derivative(x):
+    if x>0:
+        return 1
+    else:
+        return 0
+def softmax_derivative(x):
+    x_reshape = x.reshape(-1,1)
+    return np.diagflat(x_reshape) - np.dot(x_reshape,np.transpose(x_reshape))

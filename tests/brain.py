@@ -94,7 +94,8 @@ if __name__=="__main__":
     print(loss((net.feedforward(test)), expectedoutput))
     
     
-    backpropfinal(net,test,expectedoutput)
-    
+    #backpropfinal(net,test,expectedoutput)
+    print(backprop(net,test,expectedoutput))
+    #print(softmax_derivative(np.array([0.95,0,0.05,0,0])))
     
     window.mainloop()

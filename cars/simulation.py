@@ -1,6 +1,6 @@
 import pygame as pg
 import car
-import road
+
 
 pg.init()
 
@@ -11,7 +11,7 @@ WINDOW = pg.display.set_mode((WIDTH,HEIGHT))
 CAR_IMG_SRC = ".\\assets\\car.png"
 
 car = car.Car(50,250,45,75,CAR_IMG_SRC)
-road = road.Road(3,10,390)
+
 
 WINDOW.fill((255,255,255))
 
