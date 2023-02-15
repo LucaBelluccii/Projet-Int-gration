@@ -115,7 +115,7 @@ def backpropfinal(network,x,y):
         else :
             variations.append(np.matmul(weights,variations[i-1]))
     
-    print(variations)
+    return variations
     #deriveout=a[-2]*(a[-1]-y)
     
     # goal: dCost/dWeightx

@@ -74,7 +74,7 @@ class Layer:
 
 if __name__=="__main__":
     # code pour tests
-    net = Network([2, 3,3, 2])
+    net = Network([3, 5,5, 3])
     window = tk.Tk()
     window.resizable(False, False)
 
@@ -83,19 +83,49 @@ if __name__=="__main__":
 
     test = np.array([r.randint(0, 5)
                 for i in range(len(net.layers[0].weights[0]))])
+    print('Shape:')
     print(test.shape)
-    print("outputs")
+    print()
+    print()
+    print("Outputs")
+    print('Feededforward:')
     print(net.feedforward(test))
 
 
+    print()
+    print()
+    print('Bias:')
+    print(net.layers[0].biases)
+    print(net.layers[1].biases)
+    print(net.layers[2].biases)
+    
     expectedoutput = np.zeros(len(net.layers[-1].weights))
     expectedoutput[0] = 1
-    print("cost")
+    
+    print("Cost:")
     print(loss((net.feedforward(test)), expectedoutput))
     
     
     #backpropfinal(net,test,expectedoutput)
-    print(backprop(net,test,expectedoutput))
+    deltaarray=(backpropfinal(net,test,expectedoutput))
+    
+    print('newbiases')
+    net.layers[0].biases=net.layers[0].biases-deltaarray[2]
+    net.layers[1].biases=net.layers[1].biases-deltaarray[1]
+    net.layers[2].biases=net.layers[2].biases-deltaarray[0]
+    print(net.layers[0].biases)
+    print(net.layers[1].biases)
+    print(net.layers[2].biases)
+    
+    
+    print()
+    print()
+    print('New Cost:')
+    print(loss((net.feedforward(test)), expectedoutput))
+    
+    
+    #print(loss((net.feedforward()), expectedoutput))
+    
     #print(softmax_derivative(np.array([0.95,0,0.05,0,0])))
     
     window.mainloop()
