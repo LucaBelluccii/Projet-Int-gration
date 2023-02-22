@@ -67,30 +67,7 @@ def loss(output,expectedoutput):
 
 #backprop
 def backpropfinal(network,x,y):
-    # goal: dCost/dWeight
-    #   dCost/dWeight=dZ/dWeight * dRelu/dZ * dCost/dRelu
-    #
-    # a:output y: expected output w: weight b: bias
-    #
-    # ////////////
-    #
-    # dCost/dRelu = 2(a(l)-y)
-    #
-    # ////////////Z=w(l)a(l-1) + b(l)
-    #
-    # dRelu/dZ = 1
-    #
-    # ////////////
-    #
-    # dZ/dWeight = wei                       |a(l-1)
-    #
-    # ////////////
-    # 
-    # dCost/dWeight= a(l-1) * (a(l)-y)//////// pas bon
     
-    # error=
-    
-    #premiere derive
     a=[]
     output=network.layers[0].feedforward(x)
     a.append(np.array(output))
@@ -115,17 +92,26 @@ def backpropfinal(network,x,y):
         else :
             variations.append(np.matmul(weights,variations[i-1]))
     
-    return variations
-    #deriveout=a[-2]*(a[-1]-y)
+    #print('l3')
+    #print(a[2])
+    #print('vars')
+    #print(variations[0])
+    #print('mult')
+    #print(a[2]*variations[0])
     
-    # goal: dCost/dWeightx
-    #   dCost/dWeightx= x fois /(dZ/dWeightx dRelu/dZ * dWeight/dRelu)/ * dZ/dWeight * dRelu/dZ * dCost/dRelu
-    #
-    #   dWeight/dRelu = a(l-x-1) * 1 *
-    #
-    #
     
-    #next derive
+    weightsvar=[]#variation pour weights
+    biasesvar=[]#variation pour biases
+    
+    i=len(variations)-1
+    for num in a:
+        weightsvar.append(num*variations[i])#ajoute les weights var
+        biasesvar.append(variations[i])#réordonne les biases var
+        i-=1
+    
+    
+    
+    return biasesvar,weightsvar
 
 def relu_vector(x):
     return np.array([max(0,n) for n in x])
@@ -139,3 +125,27 @@ def relu_derivative(x):
 def softmax_derivative(x):
     x_reshape = x.reshape(-1,1)
     return np.diagflat(x_reshape) - np.dot(x_reshape,np.transpose(x_reshape))
+
+#ajoute le backprop au biases
+def addbacktobiases(net,test,expectedoutput):
+    deltaarray,deltarr=(backpropfinal(net,test,expectedoutput))
+    #print()
+    #print()
+    #print('Difbiases:')
+    #print(deltaarray)
+    
+    
+    #print()
+    #print()
+    #print('Newbiases:')
+    for i,layer in enumerate(net.layers):
+        layer.biases=layer.biases-deltaarray[i]*10#constante pour amplifier (a enlever lorsqu'un affectera les weights)
+    
+    #for layer in net.layers:
+    #    print(layer.biases)
+
+#ajoute le backprop au weights
+def addbacktoweights(net,test,expectedoutput):
+    deltaarray,deltarr=(backpropfinal(net,test,expectedoutput))
+    for i,layer in enumerate(net.layers):
+        print(layer.weights)

@@ -86,56 +86,37 @@ if __name__=="__main__":
                 for i in range(len(net.layers[0].weights[0]))])
 
     
-    print("Outputs")
-    print('Feededforward:')
-    print(net.feedforward(test))
+    #print("Outputs")
+    #print('Feededforward:')
+    #print(net.feedforward(test))
 
 
-    print()
-    print()
-    print('Biases:')
-    for layer in net.layers:
-        print(layer.biases)
-    print()
-    print()
+    #print()
+    #print()
+    #print('Biases:')
+    #for layer in net.layers:
+    #    print(layer.biases)
+    #print()
+    #print()
     
     expectedoutput = np.zeros(len(net.layers[-1].weights))
     expectedoutput[0] = 1
     
-    print("Cost:")
-    print(loss((net.feedforward(test)), expectedoutput))
+    #print("Cost:")
+    #print(loss((net.feedforward(test)), expectedoutput))
     
     
-    #backpropfinal(net,test,expectedoutput)
     
+    addbacktobiases(net,test,expectedoutput)
+    ##
+    ##
+    addbacktoweights(net,test,expectedoutput)
+    ##
+    ##
     
-    deltaarray=(backpropfinal(net,test,expectedoutput))
-    print()
-    print()
-    print('Difbiases:')
-    print(deltaarray)
-    
-    
-    print()
-    print()
-    print('Newbiases:')
-    i=len(net.layers)-1
-    for layer in net.layers:
-        layer.biases=layer.biases-deltaarray[i]*10#constante pour amplifier (a enlever lorsqu'un affectera les weights)
-        i-=1
-    
-    for layer in net.layers:
-        print(layer.biases)
-    
-    
-    print()
-    print()
-    print('New Cost:')
-    print(loss((net.feedforward(test)), expectedoutput))
-    
-    
-    #print(loss((net.feedforward()), expectedoutput))
-    
-    #print(softmax_derivative(np.array([0.95,0,0.05,0,0])))
+    #print()
+    #print()
+    #print('New Cost:')
+    #print(loss((net.feedforward(test)), expectedoutput))
     
     window.mainloop()
