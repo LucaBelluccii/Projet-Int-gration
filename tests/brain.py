@@ -75,7 +75,7 @@ class Layer:
 if __name__=="__main__":
     # code pour tests
    
-    net = Network([10, 16,16, 10])
+    net = Network([12, 32,32,32, 10])
     window = tk.Tk()
     window.resizable(False, False)
 
@@ -102,21 +102,23 @@ if __name__=="__main__":
     expectedoutput = np.zeros(len(net.layers[-1].weights))
     expectedoutput[0] = 1
     
-    #print("Cost:")
-    #print(loss((net.feedforward(test)), expectedoutput))
     
     
+    print("Cost:")
+    print(loss((net.feedforward(test)), expectedoutput))
     
-    addbacktobiases(net,test,expectedoutput)
+    train(net,[[test,expectedoutput]],0.01)
+    
+    #addbacktobiases(net,test,expectedoutput)
     ##
     ##
-    addbacktoweights(net,test,expectedoutput)
+    #addbacktoweights(net,test,expectedoutput)
     ##
     ##
     
     #print()
     #print()
-    #print('New Cost:')
-    #print(loss((net.feedforward(test)), expectedoutput))
+    print('New Cost:')
+    print(loss((net.feedforward(test)), expectedoutput))
     
-    window.mainloop()
+    #window.mainloop()
