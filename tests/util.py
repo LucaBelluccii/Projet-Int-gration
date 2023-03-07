@@ -196,3 +196,9 @@ def addbacktoweights(net, test, expectedoutput):
         for j in range(len(temp)):
             temp[j] = temp[j] - deltarr[i]*100
         layer.weights = np.transpose(temp.copy())
+
+def imtodata(imagelist):
+    newlist=[]
+    for i in range(len(imagelist)):
+        newlist.append(np.array(imagelist[i]).flatten())
+    return newlist
