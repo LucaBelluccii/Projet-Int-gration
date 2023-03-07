@@ -101,7 +101,7 @@ def backpropfinal(network, x, y):
     for i in reversed(range(0, len(network.layers)-1)):
         weights = np.transpose(network.layers[i+1].weights)
         if (i == len(network.layers)-1):
-            variations.append((weights@ogerror)*softmax_derivative(ogerror))
+            variations.append((ogerror)*softmax_derivative(ogerror))
         else:
             variations.append(
                 (weights@variations[len(variations)-1])*relu_derivative(a[len(variations)-1]))
@@ -119,7 +119,7 @@ def backpropfinal(network, x, y):
     i = len(variations)-1
 
     for num in a:
-        weightsvar.append(num@variations[i])  # ajoute les weights var
+        weightsvar.append(np.matmul(variations[i],np.transpose(num)))  # ajoute les weights var
         biasesvar.append(variations[i])  # réordonne les biases var
         i -= 1
 
@@ -175,8 +175,11 @@ def gradient_descent(network,batch, learning_rate):
             weights_derivative[i] += weight
 
     for i, layer in enumerate(network.layers):
+       
         layer.weights = np.transpose(np.transpose(layer.weights)-(weights_derivative[i]*(learning_rate/len(batch))))
+        
         layer.biases = layer.biases - (bias_derivative[i]*(learning_rate/len(batch)))
+    
 
 
 # ajoute le backprop au biases
@@ -218,7 +221,14 @@ def imtodata(imagelist):
         newlist.append(np.array(imagelist[i]).flatten())
     return newlist
 
-def numtolist(num,net):
-    newlist = np.zeros(len(net.layers[-1].weights))
-    newlist[num] = 1
-    return newlist
+
+    
+
+def numtolist(data,net):
+    converted_data = []
+    for num in data:
+        newlist = np.zeros(len(net.layers[-1].weights))
+        
+        newlist[num] = 1
+        converted_data.append(newlist)
+    return (converted_data)
