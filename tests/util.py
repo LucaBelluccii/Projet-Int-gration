@@ -141,7 +141,14 @@ def softmax_derivative(x):
     return np.diagflat(x_reshape) - np.dot(x_reshape, np.transpose(x_reshape))
 
 
-def train(network, dataSet, learning_rate):
+def train(network,data,batch_size,learning_rate):
+    batches = m.ceil(len(data)/batch_size)
+    
+    for i in range(batches):
+        batch = data[i*batch_size:min((i+1)*batch_size,len(data))]
+        gradient_descent(network,batch,learning_rate)    
+
+def gradient_descent(network,batch, learning_rate):
 
     bias_derivative = []
     weights_derivative = []
@@ -152,7 +159,7 @@ def train(network, dataSet, learning_rate):
 
    
 
-    for data in dataSet:
+    for data in batch:
         biases, weights = backpropfinal(network, data[0], data[1])
         for i, bias in enumerate(biases):
             bias_derivative[i] += bias
@@ -160,8 +167,8 @@ def train(network, dataSet, learning_rate):
             weights_derivative[i] += weight
 
     for i, layer in enumerate(network.layers):
-        layer.weights = np.transpose(np.transpose(layer.weights)-(weights_derivative[i]*(learning_rate/len(dataSet))))
-        layer.biases = layer.biases - (bias_derivative[i]*(learning_rate/len(dataSet)))
+        layer.weights = np.transpose(np.transpose(layer.weights)-(weights_derivative[i]*(learning_rate/len(batch))))
+        layer.biases = layer.biases - (bias_derivative[i]*(learning_rate/len(batch)))
 
 
 # ajoute le backprop au biases
