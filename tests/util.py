@@ -141,6 +141,14 @@ def softmax_derivative(x):
     return np.diagflat(x_reshape) - np.dot(x_reshape, np.transpose(x_reshape))
 
 
+def evaluate(network,test_data):
+    cost = 0
+    for data in test_data:
+        prediction = network.feedforward(data[0])
+        cost += loss(prediction,data[1])
+    return cost/len(test_data)
+
+
 def train(network,data,batch_size,learning_rate):
     batches = m.ceil(len(data)/batch_size)
     
