@@ -202,3 +202,8 @@ def imtodata(imagelist):
     for i in range(len(imagelist)):
         newlist.append(np.array(imagelist[i]).flatten())
     return newlist
+
+def numtolist(num,net):
+    newlist = np.zeros(len(net.layers[-1].weights))
+    newlist[num] = 1
+    return newlist
