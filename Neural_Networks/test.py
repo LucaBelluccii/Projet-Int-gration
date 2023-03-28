@@ -29,13 +29,13 @@ network = Network([784,16,16,10])   #création du réseau
 x_plot=[]
 y_plot=[]
 
-for n in range(500):   #cycles d'entrainement
-    network.gradient_descent(x_train,y_train,0.9)   #entrainer le réseau avec un facteur alpha de 0.1
-    if(n%5)==0:
+for n in range(16):   #cycles d'entrainement
+    network.adam_mini_batch(x_train,y_train,alpha=0.001)   #entrainer le réseau avec un facteur alpha de 0.1
+    if(n%1)==0:
         x_plot.append(n)
         y_plot.append(get_accuracy(get_predictions(network.feed_forward(x_test)),y_test))
     
-    if n%50==0:     #afficher les résultats tout les 50 cycles
+    if n%1==0:     #afficher les résultats tout les 50 cycles
         print("Epoch : ",n, " , accuracy = ",get_accuracy(get_predictions(network.feed_forward(x_test)),y_test))
 pkl.dump(network,open("big_bauss.pkl","wb"))
 plt.plot(x_plot,y_plot)
