@@ -52,6 +52,132 @@ def get_accuracy(predictions, Y):
     return np.sum(predictions == Y) / Y.size
 
 
+
+"""
+descente de gradient
+applique des dérivées trouvées par backprop sur les poids et biais du réseau
+"""
+def gradient_descent(network,x,y,alpha):
+    delta_biases, delta_weights = network.backprop(x,y)
+    for i in range(len(network.biases)):
+        network.weights[i] = network.weights[i] - alpha*delta_weights[i]
+        network.biases[i] = network.biases[i] - alpha*delta_biases[i]
+
+def stochastic_gradient_descent_mini_batch(network,x,y,alpha=0.1,momentum=0.9,batch_size=16):
+        
+    batches = math.ceil(y.size/batch_size)
+        
+    for n in range(batches):
+        x_temp = x.T[n*batch_size:min((n+1)*batch_size,y.size-1)]
+        x_temp = x_temp.T
+        y_temp = y[n*batch_size:min((n+1)*batch_size,y.size-1)]
+            
+        delta_biases,delta_weights = network.backprop(x_temp,y_temp)
+            
+        for i in range(len(network.weights)):
+                
+            network.weights[i] = network.weights[i] - alpha*delta_weights[i]
+            network.biases[i] = network.biases[i] - alpha*delta_biases[i]     
+            
+def gradient_descent_momentum(network,x,y,alpha=0.01,momentum=0.9,batch_size=16):
+        
+    batches = math.ceil(y.size/batch_size)
+        
+    for n in range(batches):
+        x_temp = x.T[n*batch_size:min((n+1)*batch_size,y.size-1)]
+        x_temp = x_temp.T
+        y_temp = y[n*batch_size:min((n+1)*batch_size,y.size-1)]
+            
+        delta_biases,delta_weights = network.backprop(x_temp,y_temp)
+            
+        for i in range(len(network.weights)):
+            network.velocity[i] = momentum*network.velocity[i] + alpha*delta_weights[i]
+                
+            network.weights[i] = network.weights[i] - network.velocity[i]
+            network.biases[i] = network.biases[i] - alpha*delta_biases[i]      
+   
+def adaDelta(network,x,y,alpha=0.01):
+        
+        
+    delta_biases,delta_weights = network.backprop(x,y)
+        
+    for i in range(len(delta_weights)):
+            network.gradient_sum_weights[i] += delta_weights[i]**2
+            network.gradient_sum_biases[i] +=delta_biases[i]**2
+    epsilon_weights = [np.zeros(network.gradient_sum_weights[i].shape)+0.000000000000000000000001 for i in range(len(delta_weights))]     
+    epsilon_biases =  [np.zeros(network.gradient_sum_biases[i].shape)+0.000000000000000000000001 for i in range(len(delta_weights))]  
+               
+    learning_rate_weights = [alpha / (network.gradient_sum_weights[i]**(1/2)+epsilon_weights[i]) for i in range(len(delta_weights))]
+    learning_rate_biases =  [alpha / (network.gradient_sum_biases[i]**(1/2)+epsilon_biases[i]) for i in range(len(delta_weights))]
+    for i in range(len(delta_weights)):
+        network.weights[i] = network.weights[i] - learning_rate_weights[i]*delta_weights[i]
+        network.biases[i] = network.biases[i] - learning_rate_biases[i]*delta_biases[i]     
+        
+def adaDelta_batch(network,x,y,alpha=0.01,batch_size=16):
+    batches = math.ceil(y.size/batch_size)
+        
+    for n in range(batches):
+        x_temp = x.T[n*batch_size:min((n+1)*batch_size,y.size-1)]
+        x_temp = x_temp.T
+        y_temp = y[n*batch_size:min((n+1)*batch_size,y.size-1)]
+        delta_biases,delta_weights = network.backprop(x_temp,y_temp)
+        
+        for i in range(len(delta_weights)):
+                network.gradient_sum_weights[i] += delta_weights[i]**2
+                network.gradient_sum_biases[i] +=delta_biases[i]**2
+        epsilon_weights = [np.zeros(network.gradient_sum_weights[i].shape)+0.000000000000000000000001 for i in range(len(delta_weights))]     
+        epsilon_biases =  [np.zeros(network.gradient_sum_biases[i].shape)+0.000000000000000000000001 for i in range(len(delta_weights))]  
+               
+        learning_rate_weights = [alpha / (network.gradient_sum_weights[i]**(1/2)+epsilon_weights[i]) for i in range(len(delta_weights))]
+        learning_rate_biases =  [alpha / (network.gradient_sum_biases[i]**(1/2)+epsilon_biases[i]) for i in range(len(delta_weights))]
+        for i in range(len(delta_weights)):
+            network.weights[i] = network.weights[i] - learning_rate_weights[i]*delta_weights[i]
+            network.biases[i] = network.biases[i] - learning_rate_biases[i]*delta_biases[i]
+        
+        
+def adam(network,x,y,alpha=0.001,beta1=0.9,beta2=0.999):
+    delta_biases,delta_weights = network.backprop(x,y)
+        
+    m_hat = []
+    v_hat=[]
+        
+    epsilon = [np.zeros(delta_weights[i].shape)+0.000000000000000000000001 for i in range(len(delta_weights))]     
+        
+    for i in range(len(delta_weights)):
+        network.momentum[i] = beta1*network.momentum[i] + (1-beta1)*delta_weights[i]
+        network.velocity[i] = beta2*network.velocity[i] + (1-beta2)*delta_weights[i]**2
+        m_hat.append(network.momentum[i]/(1-beta1))
+        v_hat.append(network.velocity[i]/(1-beta2))
+            
+        network.weights[i] = network.weights[i] - m_hat[i]*(alpha/(v_hat[i]**(1/2)+epsilon[i]))
+        
+def adam_mini_batch(network,x,y,alpha=0.001,beta1=0.9,beta2=0.999,batch_size=16):
+    batches = math.ceil(y.size/batch_size)
+        
+    for n in range(batches):
+        x_temp = x.T[n*batch_size:min((n+1)*batch_size,y.size-1)]
+        x_temp = x_temp.T
+        y_temp = y[n*batch_size:min((n+1)*batch_size,y.size-1)]
+        delta_biases,delta_weights = network.backprop(x_temp,y_temp)
+        
+        m_hat = []
+        v_hat=[]
+        
+        epsilon = [np.zeros(delta_weights[i].shape)+0.000000000000000000000001 for i in range(len(delta_weights))]     
+        
+        for i in range(len(delta_weights)):
+            network.momentum[i] = beta1*network.momentum[i] + (1-beta1)*delta_weights[i]
+            network.velocity[i] = beta2*network.velocity[i] + (1-beta2)*delta_weights[i]**2
+            m_hat.append(network.momentum[i]/(1-beta1))
+            v_hat.append(network.velocity[i]/(1-beta2))
+            
+            network.weights[i] = network.weights[i] - m_hat[i]*(alpha/(v_hat[i]**(1/2)+epsilon[i]))
+            network.biases[i] = network.biases[i] - alpha*delta_biases[i]
+        
+
+
+
+
 """
 Classe des réseaux 
 Programmés en objet afin d'être sérialisable
@@ -147,125 +273,4 @@ class Network:
 
         return delta_biases,delta_weights
     
-    """
-    descente de gradient
-    applique des dérivées trouvées par backprop sur les poids et biais du réseau
-    """
-    def gradient_descent(self,x,y,alpha):
-        delta_biases, delta_weights = self.backprop(x,y)
-        for i in range(len(self.biases)):
-            self.weights[i] = self.weights[i] - alpha*delta_weights[i]
-            self.biases[i] = self.biases[i] - alpha*delta_biases[i]
-
-    def stochastic_gradient_descent_mini_batch(self,x,y,alpha=0.1,momentum=0.9,batch_size=16):
-        
-        batches = math.ceil(y.size/batch_size)
-        
-        for n in range(batches):
-            x_temp = x.T[n*batch_size:min((n+1)*batch_size,y.size-1)]
-            x_temp = x_temp.T
-            y_temp = y[n*batch_size:min((n+1)*batch_size,y.size-1)]
-            
-            delta_biases,delta_weights = self.backprop(x_temp,y_temp)
-            
-            for i in range(len(self.weights)):
-                
-                self.weights[i] = self.weights[i] - alpha*delta_weights[i]
-                self.biases[i] = self.biases[i] - alpha*delta_biases[i]     
-            
-    def gradient_descent_momentum(self,x,y,alpha=0.01,momentum=0.9,batch_size=16):
-        
-        batches = math.ceil(y.size/batch_size)
-        
-        for n in range(batches):
-            x_temp = x.T[n*batch_size:min((n+1)*batch_size,y.size-1)]
-            x_temp = x_temp.T
-            y_temp = y[n*batch_size:min((n+1)*batch_size,y.size-1)]
-            
-            delta_biases,delta_weights = self.backprop(x_temp,y_temp)
-            
-            for i in range(len(self.weights)):
-                self.velocity[i] = momentum*self.velocity[i] + alpha*delta_weights[i]
-                
-                self.weights[i] = self.weights[i] - self.velocity[i]
-                self.biases[i] = self.biases[i] - alpha*delta_biases[i]      
-   
-    def adaDelta(self,x,y,alpha=0.01):
-        
-        
-        delta_biases,delta_weights = self.backprop(x,y)
-        
-        for i in range(len(delta_weights)):
-                self.gradient_sum_weights[i] += delta_weights[i]**2
-                self.gradient_sum_biases[i] +=delta_biases[i]**2
-        epsilon_weights = [np.zeros(self.gradient_sum_weights[i].shape)+0.000000000000000000000001 for i in range(len(delta_weights))]     
-        epsilon_biases =  [np.zeros(self.gradient_sum_biases[i].shape)+0.000000000000000000000001 for i in range(len(delta_weights))]  
-               
-        learning_rate_weights = [alpha / (self.gradient_sum_weights[i]**(1/2)+epsilon_weights[i]) for i in range(len(delta_weights))]
-        learning_rate_biases =  [alpha / (self.gradient_sum_biases[i]**(1/2)+epsilon_biases[i]) for i in range(len(delta_weights))]
-        for i in range(len(delta_weights)):
-            self.weights[i] = self.weights[i] - learning_rate_weights[i]*delta_weights[i]
-            self.biases[i] = self.biases[i] - learning_rate_biases[i]*delta_biases[i]     
-        
-    def adaDelta_batch(self,x,y,alpha=0.01,batch_size=16):
-        batches = math.ceil(y.size/batch_size)
-        
-        for n in range(batches):
-            x_temp = x.T[n*batch_size:min((n+1)*batch_size,y.size-1)]
-            x_temp = x_temp.T
-            y_temp = y[n*batch_size:min((n+1)*batch_size,y.size-1)]
-            delta_biases,delta_weights = self.backprop(x_temp,y_temp)
-        
-            for i in range(len(delta_weights)):
-                    self.gradient_sum_weights[i] += delta_weights[i]**2
-                    self.gradient_sum_biases[i] +=delta_biases[i]**2
-            epsilon_weights = [np.zeros(self.gradient_sum_weights[i].shape)+0.000000000000000000000001 for i in range(len(delta_weights))]     
-            epsilon_biases =  [np.zeros(self.gradient_sum_biases[i].shape)+0.000000000000000000000001 for i in range(len(delta_weights))]  
-               
-            learning_rate_weights = [alpha / (self.gradient_sum_weights[i]**(1/2)+epsilon_weights[i]) for i in range(len(delta_weights))]
-            learning_rate_biases =  [alpha / (self.gradient_sum_biases[i]**(1/2)+epsilon_biases[i]) for i in range(len(delta_weights))]
-            for i in range(len(delta_weights)):
-                self.weights[i] = self.weights[i] - learning_rate_weights[i]*delta_weights[i]
-                self.biases[i] = self.biases[i] - learning_rate_biases[i]*delta_biases[i]
-        
-        
-    def adam(self,x,y,alpha=0.001,beta1=0.9,beta2=0.999):
-        delta_biases,delta_weights = self.backprop(x,y)
-        
-        m_hat = []
-        v_hat=[]
-        
-        epsilon = [np.zeros(delta_weights[i].shape)+0.000000000000000000000001 for i in range(len(delta_weights))]     
-        
-        for i in range(len(delta_weights)):
-            self.momentum[i] = beta1*self.momentum[i] + (1-beta1)*delta_weights[i]
-            self.velocity[i] = beta2*self.velocity[i] + (1-beta2)*delta_weights[i]**2
-            m_hat.append(self.momentum[i]/(1-beta1))
-            v_hat.append(self.velocity[i]/(1-beta2))
-            
-            self.weights[i] = self.weights[i] - m_hat[i]*(alpha/(v_hat[i]**(1/2)+epsilon[i]))
-        
-    def adam_mini_batch(self,x,y,alpha=0.001,beta1=0.9,beta2=0.999,batch_size=16):
-        batches = math.ceil(y.size/batch_size)
-        
-        for n in range(batches):
-            x_temp = x.T[n*batch_size:min((n+1)*batch_size,y.size-1)]
-            x_temp = x_temp.T
-            y_temp = y[n*batch_size:min((n+1)*batch_size,y.size-1)]
-            delta_biases,delta_weights = self.backprop(x_temp,y_temp)
-        
-            m_hat = []
-            v_hat=[]
-        
-            epsilon = [np.zeros(delta_weights[i].shape)+0.000000000000000000000001 for i in range(len(delta_weights))]     
-        
-            for i in range(len(delta_weights)):
-                self.momentum[i] = beta1*self.momentum[i] + (1-beta1)*delta_weights[i]
-                self.velocity[i] = beta2*self.velocity[i] + (1-beta2)*delta_weights[i]**2
-                m_hat.append(self.momentum[i]/(1-beta1))
-                v_hat.append(self.velocity[i]/(1-beta2))
-            
-                self.weights[i] = self.weights[i] - m_hat[i]*(alpha/(v_hat[i]**(1/2)+epsilon[i]))
-                self.biases[i] = self.biases[i] - alpha*delta_biases[i]
-        
-
+  

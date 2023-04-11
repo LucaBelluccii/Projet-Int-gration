@@ -3,7 +3,7 @@ import subprocess
 import paint
 import choixreseau
 import test
-
+import os
 
 def bouton_quit(xy, text, shades, screen):
 
@@ -121,15 +121,15 @@ while (True):
 		for ev in pygame.event.get():
 
 			if ev.type == pygame.QUIT:
-				pygame.quit()
-
+				quit()
+				
 			# checks if a mouse is clicked
 			if ev.type == pygame.MOUSEBUTTONDOWN:
 
 				# if the mouse is clicked on the
 				# button the game is terminated
 				if posquit[0] <= mouse[0] <= posquit[0]+posquit[2] and posquit[1] <= mouse[1] <= posquit[1]+posquit[3]:
-					pygame.quit()
+					quit()
 				elif posdessin[0] <= mouse[0] <= posdessin[0]+posdessin[2] and posdessin[1] <= mouse[1] <= posdessin[1]+posdessin[3]:
 					dessin = True
 					menu = False
@@ -150,7 +150,8 @@ while (True):
 		mouse = pygame.mouse.get_pos()
 		for ev in pygame.event.get():
 			if ev.type == pygame.QUIT:
-				pygame.quit()
+				quit()
+				
 			if ev.type == pygame.MOUSEBUTTONDOWN:
 			
 				if posretour[0] <= mouse[0] <= posretour[0]+posretour[2] and posretour[1] <= mouse[1] <= posretour[1]+posretour[3]:
@@ -165,11 +166,14 @@ while (True):
 
 		pygame.display.update()
 
+	type=""
+	nblayers=0
+	nbneuronnes=0
+	network =0
+	activation =0
 	while reseau:
      
-		type=""
-		nblayers=0
-		nbneuronnes=0
+		
   
 		bouton(posretour, textretour, shades, screenmain)
 		bouton(poscreer,textcreer,shades,screenmain)
@@ -177,15 +181,18 @@ while (True):
 		mouse = pygame.mouse.get_pos()
 		for ev in pygame.event.get():
 			if ev.type == pygame.QUIT:
-				pygame.quit()
+				quit()
+				
 		if ev.type == pygame.MOUSEBUTTONDOWN:
 			
 				if posretour[0] <= mouse[0] <= posretour[0]+posretour[2] and posretour[1] <= mouse[1] <= posretour[1]+posretour[3]:
 						menu=True
-						dessin=False
+						reseau=False
 				elif poschoisir[0] <= mouse[0] <= poschoisir[0]+poschoisir[2] and poschoisir[1] <= mouse[1] <= poschoisir[1]+poschoisir[3]:
 					type,nblayers,nbneuronnes=choixreseau.getinfo()
+					if nbneuronnes != "":
+						network,activation = test.init_reseau(type,nblayers,nbneuronnes)
 				elif poscreer[0] <= mouse[0] <= poscreer[0]+poscreer[2] and poscreer[1] <= mouse[1] <= poscreer[1]+poscreer[3]:
-					test.run(type,nblayers,nbneuronnes)
+					test.run(network,activation)
 
 		pygame.display.update()

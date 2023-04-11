@@ -25,12 +25,12 @@ def loop():
     nbneuronne = tk.StringVar()
     
     def login_clicked():
+        global typeres
+        typeres = type_entry.selection_get()
         root.destroy()       
         msg = f'Vous avez choisi: {typeres} avec {nblayer.get()} layers et {nbneuronne.get()} neurones par layer'
-        showinfo(
-            title='Information',
-            message=msg
-        )
+        showinfo(title='Information', message=msg)
+        
         
         
     
@@ -43,22 +43,22 @@ def loop():
 
 
     # type
-    type_label = ttk.Label(frame, text="Email Address:")
+    type_label = ttk.Label(frame, text="Optimisateur:")
     type_label.pack(fill='x', expand=True)
 
     type_entry = tk.Listbox(frame, selectmode="single")
     type_entry.pack(expand=True, fill="both")
 
-    x = ["C", "C++", "Java", "Python", "R", "Go", "Ruby", "JavaScript", "Swift"]
+    x = ["gradient descent", "gradient descent mini batch", "gradient descent momentum", "adadelta", "adadelta mini batch", "adam", "adam mini batch"]
 
 
     for each_item in range(len(x)):
         type_entry.insert("end", x[each_item])
 
-
     type_entry.selection_set(0)
-
     typeres = type_entry.selection_get()
+    
+    
 
 
     # nblayers
