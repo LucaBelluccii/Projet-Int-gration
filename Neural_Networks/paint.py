@@ -3,6 +3,7 @@ import pickle as pkl
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+from tkinter.messagebox import showinfo
 
 def run():
     
@@ -19,4 +20,5 @@ def run():
 
     image = np.reshape(image,(784,1))
 
-    print(np.argmax(network.feed_forward(image)))
+    msg = f'Le réseau pense que le chiffre est: {np.argmax(network.feed_forward(image))}'
+    showinfo(title='Prédiction du réseau', message=msg)

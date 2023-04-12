@@ -3,7 +3,7 @@ import subprocess
 import paint
 import choixreseau
 import test
-import os
+from tkinter.messagebox import showinfo
 
 def bouton_quit(xy, text, shades, screen):
 
@@ -43,6 +43,8 @@ res = (720, 720)
 
 # opens up a window
 screenmain = pygame.display.set_mode(res)
+pygame.display.set_caption("Constructeur de réseau neural")
+
 # white color
 color = (255, 255, 255)
 
@@ -69,20 +71,23 @@ shades = [color_light, color_dark]
 
 # Menu
 textquit = smallfont.render('Quit', True, color)
-textreseau = smallfont.render('Creer un reseau', True, color)
+textreseau = smallfont.render('Créer un réseau', True, color)
 textdessin = smallfont.render('Test dessin', True, color)
 
 posquit = [width/2-70, height/2+80, 140, 40]  # position du bouton quitter
 posreseau = [width/2-130, height/2-80, 260, 40]  # position du bouton reseau
 posdessin = [width/2-100, height/2, 200, 40]  # position du bouton dessin
 
+#helps
+texthelpmenu=smallfont.render('?', True, color)
+poshelpmenu=[width*7/8, height*7/8, 50, 40]
 # retourMenu
 textretour=smallfont.render('Retour', True, color)
 posretour = [width/2-70, height/2+80, 140, 40]
 
 # Reseau
-textcreer=smallfont.render('Créer', True, color)
-textchoisir=smallfont.render('Choisir', True, color)
+textentrainer=smallfont.render('Entrainer le réseau', True, color)
+textcreer=smallfont.render('Créer les composantes', True, color)
 textsgd=smallfont.render('stochastic_gradient_descent_mini_batch', True, color)
 textsgdMB=smallfont.render('stochastic_gradient_descent_mini_batch', True, color)
 textgdMo=smallfont.render('gradient_descent_momentum', True, color)
@@ -91,8 +96,8 @@ textadaDMB=smallfont.render('adaDelta_mini_batch', True, color)
 textadam=smallfont.render('ADAM', True, color)
 textadamMB=smallfont.render('ADAM_mini_batch', True, color)
 
-poscreer = [width/2-100, height/2, 200, 40]
-poschoisir= [width/2-130, height/2-80, 260, 40]
+posentrainer = [width/2-150, height/2, 300, 40]
+poscreer= [width/2-180, height/2-80, 360, 40]
 
 
 # Dessin
@@ -113,7 +118,7 @@ while (True):
 		bouton_quit(posquit, textquit, shades, screenmain)
 		bouton(posreseau, textreseau, shades, screenmain)
 		bouton(posdessin, textdessin, shades, screenmain)
-
+		bouton(poshelpmenu,texthelpmenu,shades,screenmain)
     	# stores the (x,y) coordinates into
 		# the variable as a tuple
 		mouse = pygame.mouse.get_pos()
@@ -139,7 +144,11 @@ while (True):
 					reseau = True
 					menu = False
 					screenmain.fill((255, 255, 255))
-
+     
+				elif poshelpmenu[0] <= mouse[0] <= poshelpmenu[0]+poshelpmenu[2] and poshelpmenu[1] <= mouse[1] <= poshelpmenu[1]+poshelpmenu[3]:
+					msg = 'Le bouton \"Créer un réseau\" permet à l\'utilisateur de choisir la structure et entrainer un réseau qui identifie visuellement les chiffres à parir d\'une image.\nLe bouton \"Test dessin\" permet à l\'utilisateur d\'essayer son réseau ou celui préentrainer pour l\'indentification de chiffres.'
+					showinfo(title='Information', message=msg)
+ 
     	# updates the frames of the game
 		pygame.display.update()
 
@@ -147,6 +156,7 @@ while (True):
 		bouton(posfichier, textfichier, shades, screenmain)
 		bouton(posretour,textretour,shades,screenmain)
 		bouton(postest,texttest,shades,screenmain)
+		bouton(poshelpmenu,texthelpmenu,shades,screenmain)
 		mouse = pygame.mouse.get_pos()
 		for ev in pygame.event.get():
 			if ev.type == pygame.QUIT:
@@ -157,10 +167,15 @@ while (True):
 				if posretour[0] <= mouse[0] <= posretour[0]+posretour[2] and posretour[1] <= mouse[1] <= posretour[1]+posretour[3]:
 						menu=True
 						dessin=False
+						screenmain.fill((255, 255, 255))
 				elif posfichier[0] <= mouse[0] <= posfichier[0]+posfichier[2] and posfichier[1] <= mouse[1] <= posfichier[1]+posfichier[3]:
 					subprocess.call(['mspaint', 'image.png'])
 				elif postest[0] <= mouse[0] <= postest[0]+postest[2] and postest[1] <= mouse[1] <= postest[1]+postest[3]:
 					paint.run()
+				elif poshelpmenu[0] <= mouse[0] <= poshelpmenu[0]+poshelpmenu[2] and poshelpmenu[1] <= mouse[1] <= poshelpmenu[1]+poshelpmenu[3]:
+					print(1)
+					msg = 'Le bouton \"Modifier image\" permet à l\'utilisateur de changer l\'image à indentifier (l\'image doit être font noir avec un chiffre en blanc)\nLe bouton \"Test\" va identifier l\'image avec le réseau'
+					showinfo(title='Information', message=msg)
 				
 		
 
@@ -176,8 +191,10 @@ while (True):
 		
   
 		bouton(posretour, textretour, shades, screenmain)
+		bouton(posentrainer,textentrainer,shades,screenmain)
 		bouton(poscreer,textcreer,shades,screenmain)
-		bouton(poschoisir,textchoisir,shades,screenmain)
+		bouton(poshelpmenu,texthelpmenu,shades,screenmain)
+
 		mouse = pygame.mouse.get_pos()
 		for ev in pygame.event.get():
 			if ev.type == pygame.QUIT:
@@ -188,11 +205,14 @@ while (True):
 				if posretour[0] <= mouse[0] <= posretour[0]+posretour[2] and posretour[1] <= mouse[1] <= posretour[1]+posretour[3]:
 						menu=True
 						reseau=False
-				elif poschoisir[0] <= mouse[0] <= poschoisir[0]+poschoisir[2] and poschoisir[1] <= mouse[1] <= poschoisir[1]+poschoisir[3]:
+						screenmain.fill((255, 255, 255))
+				elif poscreer[0] <= mouse[0] <= poscreer[0]+poscreer[2] and poscreer[1] <= mouse[1] <= poscreer[1]+poscreer[3]:
 					type,nblayers,nbneuronnes=choixreseau.getinfo()
 					if nbneuronnes != "":
 						network,activation = test.init_reseau(type,nblayers,nbneuronnes)
-				elif poscreer[0] <= mouse[0] <= poscreer[0]+poscreer[2] and poscreer[1] <= mouse[1] <= poscreer[1]+poscreer[3]:
+				elif posentrainer[0] <= mouse[0] <= posentrainer[0]+posentrainer[2] and posentrainer[1] <= mouse[1] <= posentrainer[1]+posentrainer[3]:
 					test.run(network,activation)
-
+				elif poshelpmenu[0] <= mouse[0] <= poshelpmenu[0]+poshelpmenu[2] and poshelpmenu[1] <= mouse[1] <= poshelpmenu[1]+poshelpmenu[3]:
+					msg = 'Le bouton \"Créer les composantes\" permet à l\'utilisateur de choisir la structure du réseau neural à entrainer\nLe bouton \"Entrainer le réseau\" permet à l\'utilisateur d\'entrainer le réseau'
+					showinfo(title='Information', message=msg)
 		pygame.display.update()
