@@ -39,7 +39,7 @@ def show(network, width, height, window):
             for k in range(len(layer.weights)):
                 y2 = k*outputStep+margin+neuronSize/2
                 red = int(255*abs(layer.weights[k][j]))
-                canvas.create_line(x1, y1, x2, y2, fill=rgb2hex(red, 0, 0))
+                canvas.create_line(x1, y1, x2, y2, fill="#C41E3A")
 
     for i, layer in enumerate(network.layers):
         x1 = i*(xstep)+margin
