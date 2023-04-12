@@ -209,6 +209,10 @@ def show(network, width, height, window):
                                y1+neuronSize, fill="blue")
     canvas.pack()
     
+    
+def rgb2hex(r, g, b):
+    return f'#{r:02x}{g:02x}{b:02x}'
+
 def show2(network, width, height, window):
     canvas = tk.Canvas(window, width=width, height=height, background="black")
         
@@ -232,12 +236,25 @@ def show2(network, width, height, window):
         
        
         
-    x_step = math.ceil((width-margin*2) /  len(neuron_counts))
+    x_step = int(math.ceil((width-margin*2) /  (len(neuron_counts)-1)))-margin
     
-    
+    #afficher les poids
+    for i,neurons in enumerate(neuron_counts):
+         x1 = (i)*x_step + margin +neuron_size/2
+         x2 = x1+neuron_size
         
-    for i, neurons in enumerate(neuron_counts):
-        x1 = i*x_step + margin
+         is_oversize = True if neurons>=max_neurons else False
+        
+         y_start = margin+neuron_size/2
+        
+         if neurons<max_neurons:
+            blanks = (max_neurons-neurons)/2
+            print(neurons,blanks,max_neurons)
+            y_start = margin+((neuron_size+spacing)*blanks)
+    
+    #afficher les neurones    
+    for i, neurons in enumerate(neuron_counts): 
+        x1 = (i)*x_step + margin
         x2 = x1+neuron_size
         
         is_oversize = True if neurons>=max_neurons else False
