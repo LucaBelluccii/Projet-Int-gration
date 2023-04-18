@@ -88,17 +88,11 @@ posretour = [width/2-70, height/2+80, 140, 40]
 # Reseau
 textentrainer=smallfont.render('Entrainer le réseau', True, color)
 textcreer=smallfont.render('Créer les composantes', True, color)
-textsgd=smallfont.render('stochastic_gradient_descent_mini_batch', True, color)
-textsgdMB=smallfont.render('stochastic_gradient_descent_mini_batch', True, color)
-textgdMo=smallfont.render('gradient_descent_momentum', True, color)
-textadaD=smallfont.render('adaDelta', True, color)
-textadaDMB=smallfont.render('adaDelta_mini_batch', True, color)
-textadam=smallfont.render('ADAM', True, color)
-textadamMB=smallfont.render('ADAM_mini_batch', True, color)
+textvoirgraph=smallfont.render('Afficher le réseau', True, color)
 
 posentrainer = [width/2-150, height/2, 300, 40]
-poscreer= [width/2-180, height/2-80, 360, 40]
-
+poscreer= [width/2-180, height/2-160, 360, 40]
+posvoirgraph = [width/2-150, height/2-80, 300, 40]
 
 # Dessin
 textfichier=smallfont.render('Modifier image', True, color)
@@ -194,6 +188,7 @@ while (True):
 		bouton(posentrainer,textentrainer,shades,screenmain)
 		bouton(poscreer,textcreer,shades,screenmain)
 		bouton(poshelpmenu,texthelpmenu,shades,screenmain)
+		bouton(posvoirgraph,textvoirgraph,shades,screenmain)
 
 		mouse = pygame.mouse.get_pos()
 		for ev in pygame.event.get():
@@ -212,6 +207,9 @@ while (True):
 						network,activation = test.init_reseau(type,nblayers,nbneuronnes)
 				elif posentrainer[0] <= mouse[0] <= posentrainer[0]+posentrainer[2] and posentrainer[1] <= mouse[1] <= posentrainer[1]+posentrainer[3]:
 					test.run(network,activation)
+				elif posvoirgraph[0] <= mouse[0] <= posvoirgraph[0]+posvoirgraph[2] and posvoirgraph[1] <= mouse[1] <= posvoirgraph[1]+posvoirgraph[3]:
+					#test_appli.run()
+					print(1)
 				elif poshelpmenu[0] <= mouse[0] <= poshelpmenu[0]+poshelpmenu[2] and poshelpmenu[1] <= mouse[1] <= poshelpmenu[1]+poshelpmenu[3]:
 					msg = 'Le bouton \"Créer les composantes\" permet à l\'utilisateur de choisir la structure du réseau neural à entrainer\nLe bouton \"Entrainer le réseau\" permet à l\'utilisateur d\'entrainer le réseau'
 					showinfo(title='Information', message=msg)
