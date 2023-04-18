@@ -1,16 +1,20 @@
 import tkinter as tk
-import pygame as pg
 import numpy as np
-import matplotlib.pyplot as plt
+import math
 import BigBauss
 import util
+import cv2
+
+    
+   
+  
+window = tk.Tk()
+window.geometry("800x800")
+network = BigBauss.Network([2,20,5,2,2])
+util.show_network(network,800,800,window)
 
 
+#window.bind("<Configure>",lambda event: util.show_network(network,window.winfo_width(),window.winfo_height(),window))
 
-win = tk.PanedWindow(width=1200,height=1200)
-
-net = BigBauss.Network([2,10,459,2])
-util.show2(net,800,800,win)
-
-win.pack()
-win.mainloop()
+#window.pack()
+window.mainloop()

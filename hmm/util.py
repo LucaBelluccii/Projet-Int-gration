@@ -133,7 +133,6 @@ def adaDelta_batch(network,x,y,alpha=0.01,batch_size=16):
             network.weights[i] = network.weights[i] - learning_rate_weights[i]*delta_weights[i]
             network.biases[i] = network.biases[i] - learning_rate_biases[i]*delta_biases[i]
         
-        
 def adam(network,x,y,alpha=0.001,beta1=0.9,beta2=0.999):
     delta_biases,delta_weights = network.backprop(x,y)
         
@@ -172,73 +171,38 @@ def adam_mini_batch(network,x,y,alpha=0.001,beta1=0.9,beta2=0.999,batch_size=16)
             
             network.weights[i] = network.weights[i] - m_hat[i]*(alpha/(v_hat[i]**(1/2)+epsilon[i]))
             network.biases[i] = network.biases[i] - alpha*delta_biases[i]
-        
-
-def show(network, width, height, window):
-    canvas = tk.Canvas(window, width=width, height=height, background="black")
-    neuronSize = 40
-    margin = 5
-    xstep = (width-margin*2)/(len(network.biases))
-
-    for i, layer in enumerate(network.weights):
-        x1 = i*(xstep)+margin+neuronSize/2
-        x2 = (i+1)*xstep+margin+neuronSize/2
-        inputStep = (height-margin*2)/len(layer[0])
-        outputStep = (height-margin*2)/len(layer)
-        for j in range(len(layer[0])):
-            y1 = j*inputStep+margin+neuronSize/2
-            for k in range(len(layer)):
-                y2 = k*outputStep+margin+neuronSize/2
-                red = int(255*abs(layer[k][j]))
-                canvas.create_line(x1, y1, x2, y2, fill="#C41E3A")
-
-
-
-    for i, layer in enumerate(network.weights):
-        x1 = i*(xstep)+margin
-        x2 = (i+1)*xstep+margin
-        inputStep = (height-margin*2)/len(layer[0])
-        outputStep = (height-margin*2)/len(layer)
-        for j in range(len(layer[0])):
-            y1 = j*inputStep+margin
-            canvas.create_oval(x1, y1, x1+neuronSize,
-                               y1+neuronSize, fill="blue")
-        for k in range(len(layer)):
-            y1 = k*outputStep+margin
-            canvas.create_oval(x2, y1, x2+neuronSize,
-                               y1+neuronSize, fill="blue")
-    canvas.pack()
-    
-    
+            
+   
 def rgb2hex(r, g, b):
     return f'#{r:02x}{g:02x}{b:02x}'
 
-def show2(network, width, height, window):
+def show_network(network, width, height, window):
+  
+  
     canvas = tk.Canvas(window, width=width, height=height, background="black")
         
     neuron_counts = [len(network.weights[i][1]) for i in range(len(network.biases))]
     neuron_counts.append(len(network.weights[-1]))
     
     margin = 10
-    spacing = 2
+    min_spacing = 2
+    spacing = min_spacing
+    
     min_size = 20
     
     neuron_size = width/(max(neuron_counts))
     
     max_neurons = max(neuron_counts)
     
-    if neuron_size<min_size:
-        neuron_size = min_size
+    neuron_size = min_size
         
-        max_neurons = (height-margin*2)/(neuron_size)
-        max_neurons =   int(((height-margin*2) - int(max_neurons)*spacing)/neuron_size)
+    max_neurons = (height-margin*2)/(neuron_size)
+    max_neurons =   int(((height-margin*2) - int(max_neurons)*min_spacing)/neuron_size)
         
-        if max_neurons%2==0:
-            max_neurons-=1
-        
-       
-        
-    x_step = int(math.ceil((width-margin*2) /  (len(neuron_counts)-1)))-margin
+    if max_neurons%2==0:
+        max_neurons-=1
+            
+    x_step = int(math.ceil((width-margin*4) /  (len(neuron_counts)-1))) 
     
     for n in range(len(neuron_counts)-1):
         
@@ -254,17 +218,17 @@ def show2(network, width, height, window):
         is_oversize_initial = True if neurons_inital>=max_neurons else False
         is_oversize_next = True if neurons_next>=max_neurons else False
 
-        y_start_initial = margin +neuron_size/2  
-        y_start_next = margin  + neuron_size/2
+        y_start_initial = margin +neuron_size/2 -spacing
+        y_start_next = margin  + neuron_size/2  -spacing
             
         if neurons_inital<max_neurons:
             blanks = (max_neurons-neurons_inital)/2
-            print(neurons_inital,blanks,max_neurons)
+            
             y_start_initial = margin+((neuron_size+spacing)*blanks) + neuron_size/2
             
         if neurons_next<max_neurons:
             blanks = (max_neurons-neurons_next)/2
-            print(neurons_next,blanks,max_neurons)
+            
             y_start_next = margin+((neuron_size+spacing)*blanks) + neuron_size/2  
     
         for i in range(min(neurons_inital,max_neurons)):
@@ -286,7 +250,8 @@ def show2(network, width, height, window):
                         canvas.create_line(x1_initial,y1_initial,x1_next,y1_next,fill=rgb2hex(blue,red,0))
 
     #afficher les neurones    
-    for i, neurons in enumerate(neuron_counts): 
+    for i, neurons in enumerate(neuron_counts):
+        
         x1 = (i)*x_step + margin
         x2 = x1+neuron_size
         
@@ -296,14 +261,12 @@ def show2(network, width, height, window):
         
         if neurons<max_neurons:
             blanks = (max_neurons-neurons)/2
-            print(neurons,blanks,max_neurons)
+            
             y_start = margin+((neuron_size+spacing)*blanks)
         
         for j in range(min(max_neurons,neurons)):
             
             y1 = y_start + j*(neuron_size+spacing)
-            
-            
             
             if j!=int(max_neurons/2) or not is_oversize:
                 canvas.create_oval(x1,y1,x2,y1+neuron_size,fill="blue")
@@ -315,13 +278,4 @@ def show2(network, width, height, window):
                 canvas.create_oval(dot_x,y1+dot_size,dot_x+dot_size,y1+dot_size*2,fill="white")
                 canvas.create_oval(dot_x,y1+dot_size*2,dot_x+dot_size,y1+dot_size*3,fill="white")
             
-        
-    
-        
-        
-    
-    
-    
-    
-        
     canvas.pack()
