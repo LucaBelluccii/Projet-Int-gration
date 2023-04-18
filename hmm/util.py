@@ -225,6 +225,8 @@ def show2(network, width, height, window):
     
     neuron_size = width/(max(neuron_counts))
     
+    max_neurons = max(neuron_counts)
+    
     if neuron_size<min_size:
         neuron_size = min_size
         
@@ -238,20 +240,51 @@ def show2(network, width, height, window):
         
     x_step = int(math.ceil((width-margin*2) /  (len(neuron_counts)-1)))-margin
     
-    #afficher les poids
-    for i,neurons in enumerate(neuron_counts):
-         x1 = (i)*x_step + margin +neuron_size/2
-         x2 = x1+neuron_size
+    for n in range(len(neuron_counts)-1):
         
-         is_oversize = True if neurons>=max_neurons else False
+        x1_initial = n*x_step+margin + neuron_size/2
+        #x2_initial = x1_initial+neuron_size
         
-         y_start = margin+neuron_size/2
+        x1_next = (n+1)*x_step+margin + neuron_size/2
+        #x2_next = x1_next*x_step+margin
         
-         if neurons<max_neurons:
-            blanks = (max_neurons-neurons)/2
-            print(neurons,blanks,max_neurons)
-            y_start = margin+((neuron_size+spacing)*blanks)
+        neurons_inital = neuron_counts[n]
+        neurons_next = neuron_counts[n+1]
+        
+        is_oversize_initial = True if neurons_inital>=max_neurons else False
+        is_oversize_next = True if neurons_next>=max_neurons else False
+
+        y_start_initial = margin +neuron_size/2  
+        y_start_next = margin  + neuron_size/2
+            
+        if neurons_inital<max_neurons:
+            blanks = (max_neurons-neurons_inital)/2
+            print(neurons_inital,blanks,max_neurons)
+            y_start_initial = margin+((neuron_size+spacing)*blanks) + neuron_size/2
+            
+        if neurons_next<max_neurons:
+            blanks = (max_neurons-neurons_next)/2
+            print(neurons_next,blanks,max_neurons)
+            y_start_next = margin+((neuron_size+spacing)*blanks) + neuron_size/2  
     
+        for i in range(min(neurons_inital,max_neurons)):
+            for j in range(min(neurons_next,max_neurons)):
+                
+                y1_initial = y_start_initial + i * (neuron_size+spacing)
+                y1_next = y_start_next + j * (neuron_size+spacing)                
+
+                if i!=int(max_neurons/2) or not is_oversize_initial:
+                    if j!=int(max_neurons/2) or not is_oversize_next:
+                        
+                        red = int(max(0,network.weights[n][j][i])*500)
+                        red = min(255,red)
+                        
+                        blue = abs(int(min(0,network.weights[n][j][i])*500))
+                        blue = min(255,blue)
+                        
+                        
+                        canvas.create_line(x1_initial,y1_initial,x1_next,y1_next,fill=rgb2hex(blue,red,0))
+
     #afficher les neurones    
     for i, neurons in enumerate(neuron_counts): 
         x1 = (i)*x_step + margin
@@ -273,7 +306,7 @@ def show2(network, width, height, window):
             
             
             if j!=int(max_neurons/2) or not is_oversize:
-                canvas.create_oval(x1,y1,x2,y1+neuron_size,fill="red")
+                canvas.create_oval(x1,y1,x2,y1+neuron_size,fill="blue")
             else:
                 dot_size = int(neuron_size/3)
                 dot_x = x1 + (x2-x1)/2 - dot_size/2
