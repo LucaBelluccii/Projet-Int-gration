@@ -1,4 +1,5 @@
 import numpy as np
+import tkinter as tk
 import math
 """
 RELU : rectification linéaire unitaire
@@ -27,7 +28,6 @@ def softmax(x):
     temp = np.exp(temp) / sum(np.exp(temp))
     return temp
 
-
 """
 crée une liste de 0 et change l'élément a index Y pour 1 ex: 2-> [0,0,1,0,0,0,0,0,0,0]
 """
@@ -37,12 +37,12 @@ def one_hot(Y):
     one_hot_Y = one_hot_Y.T
     return one_hot_Y
 
-
 """
 retourne les listes de output du réseau en nombres ex: [0,0,1,0,0,0,0,0,0,0] -> 2
 """
 def get_predictions(output):
     return np.argmax(output, 0)
+
 
 
 """
@@ -52,18 +52,17 @@ def get_accuracy(predictions, Y):
     return np.sum(predictions == Y) / Y.size
 
 
-
 """
 descente de gradient
 applique des dérivées trouvées par backprop sur les poids et biais du réseau
 """
-def gradient_descent(network,x,y,alpha):
+def gradient_descent(network,x,y,alpha,batch_size=0):
     delta_biases, delta_weights = network.backprop(x,y)
     for i in range(len(network.biases)):
         network.weights[i] = network.weights[i] - alpha*delta_weights[i]
         network.biases[i] = network.biases[i] - alpha*delta_biases[i]
 
-def stochastic_gradient_descent_mini_batch(network,x,y,alpha=0.1,momentum=0.9,batch_size=16):
+def stochastic_gradient_descent_mini_batch(network,x,y,alpha=0.1,batch_size=16,momentum=0.9):
         
     batches = math.ceil(y.size/batch_size)
         
@@ -79,7 +78,7 @@ def stochastic_gradient_descent_mini_batch(network,x,y,alpha=0.1,momentum=0.9,ba
             network.weights[i] = network.weights[i] - alpha*delta_weights[i]
             network.biases[i] = network.biases[i] - alpha*delta_biases[i]     
             
-def gradient_descent_momentum(network,x,y,alpha=0.01,momentum=0.9,batch_size=16):
+def gradient_descent_momentum(network,x,y,alpha=0.01,batch_size=16,momentum=0.9):
         
     batches = math.ceil(y.size/batch_size)
         
@@ -96,7 +95,7 @@ def gradient_descent_momentum(network,x,y,alpha=0.01,momentum=0.9,batch_size=16)
             network.weights[i] = network.weights[i] - network.velocity[i]
             network.biases[i] = network.biases[i] - alpha*delta_biases[i]      
    
-def adaDelta(network,x,y,alpha=0.01):
+def adaDelta(network,x,y,alpha=0.01,batch_size=0):
         
         
     delta_biases,delta_weights = network.backprop(x,y)
@@ -133,7 +132,6 @@ def adaDelta_batch(network,x,y,alpha=0.01,batch_size=16):
         for i in range(len(delta_weights)):
             network.weights[i] = network.weights[i] - learning_rate_weights[i]*delta_weights[i]
             network.biases[i] = network.biases[i] - learning_rate_biases[i]*delta_biases[i]
-        
         
 def adam(network,x,y,alpha=0.001,beta1=0.9,beta2=0.999):
     delta_biases,delta_weights = network.backprop(x,y)
@@ -173,104 +171,111 @@ def adam_mini_batch(network,x,y,alpha=0.001,beta1=0.9,beta2=0.999,batch_size=16)
             
             network.weights[i] = network.weights[i] - m_hat[i]*(alpha/(v_hat[i]**(1/2)+epsilon[i]))
             network.biases[i] = network.biases[i] - alpha*delta_biases[i]
-        
+            
+   
+def rgb2hex(r, g, b):
+    return f'#{r:02x}{g:02x}{b:02x}'
 
-
-
-
-"""
-Classe des réseaux 
-Programmés en objet afin d'être sérialisable
-"""
-class Network:
-    """
-    Constructeur
-
-    neuron_counts : liste des nombres de neurones de chaque étage
-
-    les valeurs de poids et biais sont instanciées avec des nombres aléatoires
-    """
-    def __init__(self,neuron_counts):
-        #liste les poids de chaque étage
-        self.weights = [np.random.rand(neuron_counts[i+1],neuron_counts[i])-0.5 for i in range(len(neuron_counts)-1)]
-
-        #liste des biais de chaque étage
-        self.biases = [np.random.rand(neuron_counts[i],1)-0.5 for i in range(1,len(neuron_counts))]
-
-        self.velocity = [0 for i in range(len(neuron_counts))]
-        
-        self.gradient_sum_weights = [0 for i in range(len(neuron_counts))]
-        self.gradient_sum_biases = [0 for i in range(len(neuron_counts))]
-        
-        
-        self.momentum = [0 for i in range(len(neuron_counts))]
-        
-
-    """
-    accepte un input X et retourne la prédiciction du réseau
-    """
-    def feed_forward(self,x):
-
-        output = relu(self.weights[0].dot(x)+self.biases[0])    #premier layer
-        for i in range(1,len(self.biases)-1):   #autres layers
-            output = relu(self.weights[i].dot(output)+self.biases[i])
-        return softmax(self.weights[-1].dot(output)+self.biases[-1])    #dernier layer utilise softmax
-    
-    """
-    rétropropagation 
-
-    retourne les dérivées des couts par rapport aux biais et aux poids
-    """
-    def backprop(self,x,y):
-
-
-        #trouver les Z et les A pour les calculs (similaire a feed_forward)
-        z = []
-        a = []
-
-        z.append(self.weights[0].dot(x)+self.biases[0])
-        a.append(relu(z[0]))
-
-        for i in range(1,len(self.biases)-1):
-            z.append(self.weights[i].dot(a[i-1])+self.biases[i])
-            a.append(relu(z[i]))
-        
-        z.append(self.weights[-1].dot(a[-1])+self.biases[-1])
-        a.append(softmax(z[-1]))
-
-        
-
-        #rétropropagation (trouver les pentes)
-
-        m = len(y)  #taille de l'échantillon
-
-        
-        
-        y = one_hot(y)  #convertir Y en liste utilisable par le réseau
-        
-       
-        
-        delta = [0 for i in range(len(self.biases))]    #initialiser la liste des deltas
-
-        delta[-1] = a[-1] - y   #erreur du dernier étage
-
-        for i in range(len(self.biases)-2,-1,-1):   #erreur des autres étages
-            delta[i] = self.weights[i+1].T.dot(delta[i+1]) * relu_derivative(z[i])
-
-        
-
-        delta_weights = [0 for i in range(len(self.biases))]    #initialiser la liste des erreurs de poids
-        delta_biases = [0 for i in range(len(self.biases))]      #initialiser la liste des erreurs de biais
-
-        delta_biases[0] = 1/m * np.sum(delta[0])    #erreur des premiers biais
-        delta_weights[0] = 1/m * delta[0].dot(x.T)  #erreur des premiers weights
-
-        
-
-        for i in range(1,len(self.biases)): #erreurs des autres étages
-            delta_biases[i] = 1/m * np.sum(delta[i])
-            delta_weights[i] = 1/m * delta[i].dot(a[i-1].T)
-
-        return delta_biases,delta_weights
-    
+def show_network(network, width, height, window):
   
+  
+    canvas = tk.Canvas(window, width=width, height=height, background="black")
+        
+    neuron_counts = [len(network.weights[i][1]) for i in range(len(network.biases))]
+    neuron_counts.append(len(network.weights[-1]))
+    
+    margin = 10
+    min_spacing = 2
+    spacing = min_spacing
+    
+    min_size = 20
+    
+    neuron_size = width/(max(neuron_counts))
+    
+    max_neurons = max(neuron_counts)
+    
+    neuron_size = min_size
+        
+    max_neurons = (height-margin*2)/(neuron_size)
+    max_neurons =   int(((height-margin*2) - int(max_neurons)*min_spacing)/neuron_size)
+        
+    if max_neurons%2==0:
+        max_neurons-=1
+            
+    x_step = int(math.ceil((width-margin*4) /  (len(neuron_counts)-1))) 
+    
+    for n in range(len(neuron_counts)-1):
+        
+        x1_initial = n*x_step+margin + neuron_size/2
+        #x2_initial = x1_initial+neuron_size
+        
+        x1_next = (n+1)*x_step+margin + neuron_size/2
+        #x2_next = x1_next*x_step+margin
+        
+        neurons_inital = neuron_counts[n]
+        neurons_next = neuron_counts[n+1]
+        
+        is_oversize_initial = True if neurons_inital>=max_neurons else False
+        is_oversize_next = True if neurons_next>=max_neurons else False
+
+        y_start_initial = margin +neuron_size/2 -spacing
+        y_start_next = margin  + neuron_size/2  -spacing
+            
+        if neurons_inital<max_neurons:
+            blanks = (max_neurons-neurons_inital)/2
+            
+            y_start_initial = margin+((neuron_size+spacing)*blanks) + neuron_size/2
+            
+        if neurons_next<max_neurons:
+            blanks = (max_neurons-neurons_next)/2
+            
+            y_start_next = margin+((neuron_size+spacing)*blanks) + neuron_size/2  
+    
+        for i in range(min(neurons_inital,max_neurons)):
+            for j in range(min(neurons_next,max_neurons)):
+                
+                y1_initial = y_start_initial + i * (neuron_size+spacing)
+                y1_next = y_start_next + j * (neuron_size+spacing)                
+
+                if i!=int(max_neurons/2) or not is_oversize_initial:
+                    if j!=int(max_neurons/2) or not is_oversize_next:
+                        
+                        red = int(max(0,network.weights[n][j][i])*500)
+                        red = min(255,red)
+                        
+                        blue = abs(int(min(0,network.weights[n][j][i])*500))
+                        blue = min(255,blue)
+                        
+                        
+                        canvas.create_line(x1_initial,y1_initial,x1_next,y1_next,fill=rgb2hex(blue,red,0))
+
+    #afficher les neurones    
+    for i, neurons in enumerate(neuron_counts):
+        
+        x1 = (i)*x_step + margin
+        x2 = x1+neuron_size
+        
+        is_oversize = True if neurons>=max_neurons else False
+        
+        y_start = margin
+        
+        if neurons<max_neurons:
+            blanks = (max_neurons-neurons)/2
+            
+            y_start = margin+((neuron_size+spacing)*blanks)
+        
+        for j in range(min(max_neurons,neurons)):
+            
+            y1 = y_start + j*(neuron_size+spacing)
+            
+            if j!=int(max_neurons/2) or not is_oversize:
+                canvas.create_oval(x1,y1,x2,y1+neuron_size,fill="blue")
+            else:
+                dot_size = int(neuron_size/3)
+                dot_x = x1 + (x2-x1)/2 - dot_size/2
+                
+                canvas.create_oval(dot_x,y1,dot_x+dot_size,y1+dot_size,fill="white")
+                canvas.create_oval(dot_x,y1+dot_size,dot_x+dot_size,y1+dot_size*2,fill="white")
+                canvas.create_oval(dot_x,y1+dot_size*2,dot_x+dot_size,y1+dot_size*3,fill="white")
+            
+    canvas.pack()

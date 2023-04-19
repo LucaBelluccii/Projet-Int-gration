@@ -55,11 +55,20 @@ class Network:
         self.optimizer = util.gradient_descent
     
         match optimizer:
-            case "gradient_descent":
+            case "gradient descent":
                 self.optimizer = util.gradient_descent
-            case "adam":
-                
+            case "gradient descent mini batch":
                 self.optimizer = util.adam
+            case "gradient descent momentum":
+                self.optimizer = util.gradient_descent_momentum
+            case "adadelta":
+                self.optimizer = util.adaDelta
+            case "adadelta mini batch":
+                self.optimizer = util.adaDelta_batch
+            case "adam":
+                self.optimizer = util.adam
+            case "adam mini batch":
+                self.optimizer = util.adam_mini_batch
             case _:
                 self.optimizer = util.adam
     
