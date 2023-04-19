@@ -9,7 +9,7 @@ def getinfo():
     
     loop()
     
-    return(typeres,nblayer.get(),nbneuronne.get())
+    return(typeres,nbneuronne.get())
 
 def loop():
     global root
@@ -28,7 +28,7 @@ def loop():
         global typeres
         typeres = type_entry.selection_get()
         root.destroy()       
-        msg = f'Vous avez choisi: {typeres} avec {nblayer.get()} layers et {nbneuronne.get()} neurones par layer'
+        msg = f'Vous avez choisi: {typeres} avec un réseau de configuration 784,{nbneuronne.get()},10'
         showinfo(title='Information', message=msg)
         
         
@@ -59,15 +59,6 @@ def loop():
     typeres = type_entry.selection_get()
     
     
-
-
-    # nblayers
-    nblayer_label = ttk.Label(frame, text="Nombre de layer:")
-    nblayer_label.pack(fill='x', expand=True)
-
-    nblayer_entry = ttk.Entry(frame, textvariable=nblayer)
-    nblayer_entry.pack(fill='x', expand=True)
-
     # nbneurones
     nbneuronnes_label = ttk.Label(frame, text="Nombre de neuronnes par layer:")
     nbneuronnes_label.pack(fill='x', expand=True)

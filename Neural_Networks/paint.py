@@ -1,4 +1,3 @@
-import brain
 import pickle as pkl
 import cv2
 import matplotlib.pyplot as plt

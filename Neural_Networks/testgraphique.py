@@ -202,11 +202,11 @@ while (True):
 						reseau=False
 						screenmain.fill((255, 255, 255))
 				elif poscreer[0] <= mouse[0] <= poscreer[0]+poscreer[2] and poscreer[1] <= mouse[1] <= poscreer[1]+poscreer[3]:
-					type,nblayers,nbneuronnes=choixreseau.getinfo()
+					type,nbneuronnes=choixreseau.getinfo()
 					if nbneuronnes != "":
-						network,activation = test.init_reseau(type,nblayers,nbneuronnes)
+						network = test.init_reseau(type,nbneuronnes)
 				elif posentrainer[0] <= mouse[0] <= posentrainer[0]+posentrainer[2] and posentrainer[1] <= mouse[1] <= posentrainer[1]+posentrainer[3]:
-					test.run(network,activation)
+					test.run(network)
 				elif posvoirgraph[0] <= mouse[0] <= posvoirgraph[0]+posvoirgraph[2] and posvoirgraph[1] <= mouse[1] <= posvoirgraph[1]+posvoirgraph[3]:
 					#test_appli.run()
 					print(1)
