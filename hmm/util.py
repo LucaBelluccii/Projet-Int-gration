@@ -176,10 +176,9 @@ def adam_mini_batch(network,x,y,alpha=0.001,beta1=0.9,beta2=0.999,batch_size=16)
 def rgb2hex(r, g, b):
     return f'#{r:02x}{g:02x}{b:02x}'
 
-def show_network(network, width, height, window):
+def show_network(network, canvas,width,height):
   
-  
-    canvas = tk.Canvas(window, width=width, height=height, background="black")
+    canvas.delete("all")
         
     neuron_counts = [len(network.weights[i][1]) for i in range(len(network.biases))]
     neuron_counts.append(len(network.weights[-1]))
@@ -278,4 +277,4 @@ def show_network(network, width, height, window):
                 canvas.create_oval(dot_x,y1+dot_size,dot_x+dot_size,y1+dot_size*2,fill="white")
                 canvas.create_oval(dot_x,y1+dot_size*2,dot_x+dot_size,y1+dot_size*3,fill="white")
             
-    canvas.pack()
+    canvas.pack(fill="both", expand=True)

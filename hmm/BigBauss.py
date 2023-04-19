@@ -58,6 +58,7 @@ class Network:
             case "gradient_descent":
                 self.optimizer = util.gradient_descent
             case "adam":
+                
                 self.optimizer = util.adam
             case _:
                 self.optimizer = util.adam
