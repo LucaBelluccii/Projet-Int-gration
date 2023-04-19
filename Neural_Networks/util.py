@@ -1,6 +1,7 @@
 import numpy as np
 import tkinter as tk
 import math
+import pickle as pkl
 """
 RELU : rectification linéaire unitaire
 
@@ -56,7 +57,7 @@ def get_accuracy(predictions, Y):
 descente de gradient
 applique des dérivées trouvées par backprop sur les poids et biais du réseau
 """
-def gradient_descent(network,x,y,alpha,batch_size=0):
+def gradient_descent(network,x,y,alpha=0.9,batch_size=0):
     delta_biases, delta_weights = network.backprop(x,y)
     for i in range(len(network.biases)):
         network.weights[i] = network.weights[i] - alpha*delta_weights[i]
@@ -133,7 +134,7 @@ def adaDelta_batch(network,x,y,alpha=0.01,batch_size=16):
             network.weights[i] = network.weights[i] - learning_rate_weights[i]*delta_weights[i]
             network.biases[i] = network.biases[i] - learning_rate_biases[i]*delta_biases[i]
         
-def adam(network,x,y,alpha=0.001,beta1=0.9,beta2=0.999):
+def adam(network,x,y,alpha=0.001,batch_size=0,beta1=0.9,beta2=0.999):
     delta_biases,delta_weights = network.backprop(x,y)
         
     m_hat = []
@@ -149,7 +150,7 @@ def adam(network,x,y,alpha=0.001,beta1=0.9,beta2=0.999):
             
         network.weights[i] = network.weights[i] - m_hat[i]*(alpha/(v_hat[i]**(1/2)+epsilon[i]))
         
-def adam_mini_batch(network,x,y,alpha=0.001,beta1=0.9,beta2=0.999,batch_size=16):
+def adam_mini_batch(network,x,y,alpha=0.01,beta1=0.9,beta2=0.999,batch_size=10):
     batches = math.ceil(y.size/batch_size)
         
     for n in range(batches):
@@ -176,10 +177,9 @@ def adam_mini_batch(network,x,y,alpha=0.001,beta1=0.9,beta2=0.999,batch_size=16)
 def rgb2hex(r, g, b):
     return f'#{r:02x}{g:02x}{b:02x}'
 
-def show_network(network, width, height, window):
-  
-  
-    canvas = tk.Canvas(window, width=width, height=height, background="black")
+def show_network(network, canvas,width,height):
+      
+    canvas.delete("all")
         
     neuron_counts = [len(network.weights[i][1]) for i in range(len(network.biases))]
     neuron_counts.append(len(network.weights[-1]))
@@ -278,4 +278,23 @@ def show_network(network, width, height, window):
                 canvas.create_oval(dot_x,y1+dot_size,dot_x+dot_size,y1+dot_size*2,fill="white")
                 canvas.create_oval(dot_x,y1+dot_size*2,dot_x+dot_size,y1+dot_size*3,fill="white")
             
-    canvas.pack()
+    canvas.pack(fill="both", expand=True)
+    
+def lauch_visualisation(network):
+    
+    if network == 0:
+        network = pkl.load(open("big_bauss.pkl","rb"))
+    
+    window = tk.PanedWindow(width=800,height=800)
+    #window.geometry("800x800")
+    
+
+    canvas = tk.Canvas(window, width=800, height=800, background="black")
+
+    show_network(network = network,canvas = canvas,width = 800,height = 800)
+
+
+    window.bind("<Configure>",lambda event: show_network(network = network,canvas = canvas,width = window.winfo_width(),height = window.winfo_height()))
+
+    window.pack(fill="both", expand=True)
+    window.mainloop()

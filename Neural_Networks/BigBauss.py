@@ -1,7 +1,7 @@
 import numpy as np
 import util
-
-
+import pickle as pkl
+import pandas as pd
 
 
 
@@ -58,19 +58,31 @@ class Network:
             case "gradient descent":
                 self.optimizer = util.gradient_descent
             case "gradient descent mini batch":
-                self.optimizer = util.adam
+                self.optimizer = util.stochastic_gradient_descent_mini_batch
             case "gradient descent momentum":
                 self.optimizer = util.gradient_descent_momentum
+                self.velocity = [0 for i in range(len(neuron_counts))]
             case "adadelta":
                 self.optimizer = util.adaDelta
+                self.gradient_sum_weights = [0 for i in range(len(neuron_counts))] 
+                self.gradient_sum_biases = [0 for i in range(len(neuron_counts))] 
+
             case "adadelta mini batch":
                 self.optimizer = util.adaDelta_batch
+                self.gradient_sum_weights = [0 for i in range(len(neuron_counts))] 
+                self.gradient_sum_biases = [0 for i in range(len(neuron_counts))] 
             case "adam":
+                self.velocity = [0 for i in range(len(neuron_counts))]
+                self.momentum = [0 for i in range(len(neuron_counts))]
                 self.optimizer = util.adam
             case "adam mini batch":
+                self.velocity = [0 for i in range(len(neuron_counts))]
+                self.momentum = [0 for i in range(len(neuron_counts))]
                 self.optimizer = util.adam_mini_batch
             case _:
                 self.optimizer = util.adam
+                self.velocity = [0 for i in range(len(neuron_counts))]
+                self.momentum = [0 for i in range(len(neuron_counts))]
     
         self.one_hot_output = one_hot_output
     
@@ -139,8 +151,9 @@ class Network:
 
         return delta_biases,delta_weights
 
-    def train(self,x,y,alpha,batch_size=0):
+    def train(self,x,y,batch_size=0):
         if batch_size==0:
             batch_size = len(y)
-        self.optimizer(self,x,y,batch_size)
+        self.optimizer(self,x,y,batch_size=batch_size)
+
 

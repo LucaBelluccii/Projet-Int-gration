@@ -4,6 +4,7 @@ import paint
 import choixreseau
 import test
 from tkinter.messagebox import showinfo
+import util
 
 def bouton_quit(xy, text, shades, screen):
 
@@ -123,7 +124,7 @@ while (True):
 				quit()
 				
 			# checks if a mouse is clicked
-			if ev.type == pygame.MOUSEBUTTONDOWN:
+			if ev.type == pygame.MOUSEBUTTONUP:
 
 				# if the mouse is clicked on the
 				# button the game is terminated
@@ -156,7 +157,7 @@ while (True):
 			if ev.type == pygame.QUIT:
 				quit()
 				
-			if ev.type == pygame.MOUSEBUTTONDOWN:
+			if ev.type == pygame.MOUSEBUTTONUP:
 			
 				if posretour[0] <= mouse[0] <= posretour[0]+posretour[2] and posretour[1] <= mouse[1] <= posretour[1]+posretour[3]:
 						menu=True
@@ -195,7 +196,7 @@ while (True):
 			if ev.type == pygame.QUIT:
 				quit()
 				
-		if ev.type == pygame.MOUSEBUTTONDOWN:
+		if ev.type == pygame.MOUSEBUTTONUP:
 			
 				if posretour[0] <= mouse[0] <= posretour[0]+posretour[2] and posretour[1] <= mouse[1] <= posretour[1]+posretour[3]:
 						menu=True
@@ -203,13 +204,13 @@ while (True):
 						screenmain.fill((255, 255, 255))
 				elif poscreer[0] <= mouse[0] <= poscreer[0]+poscreer[2] and poscreer[1] <= mouse[1] <= poscreer[1]+poscreer[3]:
 					type,nbneuronnes=choixreseau.getinfo()
-					if nbneuronnes != "":
+					if nbneuronnes != 0:
 						network = test.init_reseau(type,nbneuronnes)
 				elif posentrainer[0] <= mouse[0] <= posentrainer[0]+posentrainer[2] and posentrainer[1] <= mouse[1] <= posentrainer[1]+posentrainer[3]:
 					test.run(network)
 				elif posvoirgraph[0] <= mouse[0] <= posvoirgraph[0]+posvoirgraph[2] and posvoirgraph[1] <= mouse[1] <= posvoirgraph[1]+posvoirgraph[3]:
-					#test_appli.run()
-					print(1)
+					util.lauch_visualisation(network)
+     
 				elif poshelpmenu[0] <= mouse[0] <= poshelpmenu[0]+poshelpmenu[2] and poshelpmenu[1] <= mouse[1] <= poshelpmenu[1]+poshelpmenu[3]:
 					msg = 'Le bouton \"Créer les composantes\" permet à l\'utilisateur de choisir la structure du réseau neural à entrainer\nLe bouton \"Entrainer le réseau\" permet à l\'utilisateur d\'entrainer le réseau'
 					showinfo(title='Information', message=msg)

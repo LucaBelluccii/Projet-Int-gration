@@ -7,17 +7,20 @@ from tkinter.messagebox import showwarning
 
 def init_reseau(type,nbneuronnes):
     
-    
+    nbneuronnes = nbneuronnes.replace(".",",")
+    nbneuronnes = nbneuronnes.replace(" ",",")
+    nbneuronnes = nbneuronnes.replace("/",",")
     network = Network([784,16,16,10],optimizer=type)
     try:
         neuron_counts = [int(num) for num in (nbneuronnes.split(","))]
-        neuron_counts.insert(0,784)
+        if not 0 in neuron_counts and not 1 in neuron_counts:  
+            neuron_counts.insert(0,784)
         neuron_counts.append(10)
         network = Network(neuron_counts,optimizer=type)
         network.feed_forward(np.random.randn(784,1))
     except:
         network = Network([784,16,16,10],optimizer=type)
-        showwarning(title="you dun fucked up",message="réseau invalide")
+        showwarning(title="you dun fucked up",message="réseau invalide, structure changée pour la valeur par défaut (784,16,16,10)")
     
     return network
 
@@ -45,7 +48,7 @@ def run(network):
     y_plot=[]
 
     for n in range(100):   #cycles d'entrainement
-        network.train(x = x_train,y = y_train,alpha=0.001)   #entrainer le réseau avec un facteur alpha de 0.1
+        network.train(x = x_train,y = y_train)   #entrainer le réseau avec un facteur alpha de 0.1
         if(n%1)==0:
             x_plot.append(n)
             y_plot.append(util.get_accuracy(util.get_predictions(network.feed_forward(x_test)),y_test))

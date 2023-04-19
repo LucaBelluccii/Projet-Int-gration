@@ -56,7 +56,7 @@ def get_accuracy(predictions, Y):
 descente de gradient
 applique des dérivées trouvées par backprop sur les poids et biais du réseau
 """
-def gradient_descent(network,x,y,alpha,batch_size=0):
+def gradient_descent(network,x,y,alpha=0.9,batch_size=0):
     delta_biases, delta_weights = network.backprop(x,y)
     for i in range(len(network.biases)):
         network.weights[i] = network.weights[i] - alpha*delta_weights[i]

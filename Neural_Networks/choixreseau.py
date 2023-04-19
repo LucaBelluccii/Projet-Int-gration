@@ -8,7 +8,7 @@ def getinfo():
     
     
     loop()
-    
+   
     return(typeres,nbneuronne.get())
 
 def loop():
@@ -27,7 +27,9 @@ def loop():
     def login_clicked():
         global typeres
         typeres = type_entry.selection_get()
-        root.destroy()       
+        root.destroy()
+        
+            
         msg = f'Vous avez choisi: {typeres} avec un réseau de configuration 784,{nbneuronne.get()},10'
         showinfo(title='Information', message=msg)
         
