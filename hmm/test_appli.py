@@ -10,7 +10,7 @@ import cv2
   
 window = tk.Tk()
 window.geometry("800x800")
-network = BigBauss.Network([2,20,5,2,2])
+network = BigBauss.Network([784,16,16,10])
 util.show_network(network,800,800,window)
 
 

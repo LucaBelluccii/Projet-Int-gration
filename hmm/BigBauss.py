@@ -28,7 +28,7 @@ class Network:
     
     
         if len(activations)==0:
-            print("WARNING : no activation functions provided to network")
+            #print("WARNING : no activation functions provided to network")
             activations = ["" for i in range(len(neuron_counts))]
     
         self.activations = []
@@ -46,9 +46,11 @@ class Network:
                         print("WARNING : softmax can only be used on final layer in order for backpropagation to work correctly")
                         self.derivatives.append(util.relu_derivative)
                 case _:     #default (relu)
-                    self.activations.append(util.relu)
-                    if i!= len(activations)-1:
+                    if i!=len(activations)-1:  
+                        self.activations.append(util.relu)
                         self.derivatives.append(util.relu_derivative)
+                    else:
+                        self.activations.append(util.softmax)
     
         self.optimizer = util.gradient_descent
     
