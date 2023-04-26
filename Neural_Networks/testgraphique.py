@@ -5,6 +5,7 @@ import choixreseau
 import test
 from tkinter.messagebox import showinfo
 import util
+import pickle as pkl
 
 def bouton_quit(xy, text, shades, screen):
 
@@ -97,10 +98,12 @@ posvoirgraph = [width/2-150, height/2-80, 300, 40]
 
 # Dessin
 textfichier=smallfont.render('Modifier image', True, color)
-texttest=smallfont.render('Test', True, color)
+texttest1=smallfont.render('Test réseau utilisateur', True, color)
+texttest2=smallfont.render('Test réseau préentrainé', True, color)
 
-posfichier=[width/2-130, height/2-80, 260, 40]
-postest=[width/2-50, height/2, 100, 40]
+posfichier=[width/2-130, height/2-160, 260, 40]
+postest1=[width/2-174, height/2, 350, 40]
+postest2=[width/2-185, height/2-80, 370, 40]
 
 dessin = False
 reseau = False
@@ -151,7 +154,8 @@ while (True):
 	while dessin:
 		bouton(posfichier, textfichier, shades, screenmain)
 		bouton(posretour,textretour,shades,screenmain)
-		bouton(postest,texttest,shades,screenmain)
+		bouton(postest1,texttest1,shades,screenmain)
+		bouton(postest2,texttest2,shades,screenmain)
 		bouton(poshelpmenu,texthelpmenu,shades,screenmain)
 		mouse = pygame.mouse.get_pos()
 		for ev in pygame.event.get():
@@ -166,8 +170,10 @@ while (True):
 						screenmain.fill((255, 255, 255))
 				elif posfichier[0] <= mouse[0] <= posfichier[0]+posfichier[2] and posfichier[1] <= mouse[1] <= posfichier[1]+posfichier[3]:
 					subprocess.call(['mspaint', 'image.png'])
-				elif postest[0] <= mouse[0] <= postest[0]+postest[2] and postest[1] <= mouse[1] <= postest[1]+postest[3]:
-					paint.run()
+				elif postest1[0] <= mouse[0] <= postest1[0]+postest1[2] and postest1[1] <= mouse[1] <= postest1[1]+postest1[3]:
+					paint.run(1)
+				elif postest2[0] <= mouse[0] <= postest2[0]+postest2[2] and postest2[1] <= mouse[1] <= postest2[1]+postest2[3]:
+					paint.run(2)
 				elif poshelpmenu[0] <= mouse[0] <= poshelpmenu[0]+poshelpmenu[2] and poshelpmenu[1] <= mouse[1] <= poshelpmenu[1]+poshelpmenu[3]:
 					print(1)
 					msg = 'Le bouton \"Modifier image\" permet à l\'utilisateur de changer l\'image à indentifier (l\'image doit être font noir avec un chiffre en blanc)\nLe bouton \"Test\" va identifier l\'image avec le réseau'
@@ -180,7 +186,7 @@ while (True):
 	type=""
 	nblayers=0
 	nbneuronnes=0
-	network =0
+	network =pkl.load(open("big_bauss.pkl","rb"))
 	activation =0
 	while reseau:
      

@@ -4,11 +4,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 from tkinter.messagebox import showinfo
 
-def run():
+def run(num):
     
-    network = pkl.load(open("big_bauss.pkl","rb"))
-
-
+    if num==1:
+        network = pkl.load(open("big_bauss.pkl","rb"))
+    else:
+        network = pkl.load(open("max_big_bauss.pkl","rb"))
     image = cv2.imread("image.png")
     image = cv2.cvtColor(image,cv2.COLOR_RGB2GRAY)
     image = np.array(image)/255
