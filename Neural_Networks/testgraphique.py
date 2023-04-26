@@ -4,6 +4,7 @@ import paint
 import choixreseau
 import test
 from tkinter.messagebox import showinfo
+import tkinter_messages
 import util
 import pickle as pkl
 
@@ -140,8 +141,7 @@ while (True):
 					screenmain.fill(color)
      
 				elif poshelpmenu[0] <= mouse[0] <= poshelpmenu[0]+poshelpmenu[2] and poshelpmenu[1] <= mouse[1] <= poshelpmenu[1]+poshelpmenu[3]:
-					msg = 'Le bouton \"Créer un réseau\" permet à l\'utilisateur de choisir la structure et entrainer un réseau qui identifie visuellement les chiffres à parir d\'une image.\nLe bouton \"Test dessin\" permet à l\'utilisateur d\'essayer son réseau ou celui préentrainer pour l\'indentification de chiffres.'
-					showinfo(title='Information', message=msg)
+					tkinter_messages.show_info_box()
 			elif ev.type == pygame.MOUSEBUTTONUP:
 					if posreseau[0] <= mouse[0] <= posreseau[0]+posreseau[2] and posreseau[1] <= mouse[1] <= posreseau[1]+posreseau[3]:
 						reseau = True
