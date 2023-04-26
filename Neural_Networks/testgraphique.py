@@ -4,7 +4,6 @@ import paint
 import choixreseau
 import test
 from tkinter.messagebox import showinfo
-import tkinter_messages
 import util
 import pickle as pkl
 
@@ -48,12 +47,13 @@ res = (720, 720)
 screenmain = pygame.display.set_mode(res)
 pygame.display.set_caption("Constructeur de réseau neural")
 
-# white color
-color = (255, 255, 255)
+# color
+color = "#185760"
+colortext="#FFFFFF"
 
 # shades
-color_light = (170, 170, 170)
-color_dark = (100, 100, 100)
+color_light = (67, 71, 80)
+color_dark = (37, 41, 50)
 
 # stores the width of the
 # screen into a variable
@@ -68,39 +68,39 @@ smallfont = pygame.font.SysFont('Corbel', 35)
 
 
 # Couleurs bouton
-screenmain.fill((255, 255, 255))
+screenmain.fill(color)
 shades = [color_light, color_dark]
 
 
 # Menu
-textquit = smallfont.render('Quit', True, color)
-textreseau = smallfont.render('Créer un réseau', True, color)
-textdessin = smallfont.render('Test dessin', True, color)
+textquit = smallfont.render('Quit', True, colortext)
+textreseau = smallfont.render('Créer un réseau', True, colortext)
+textdessin = smallfont.render('Test dessin', True, colortext)
 
 posquit = [width/2-70, height/2+80, 140, 40]  # position du bouton quitter
 posreseau = [width/2-130, height/2-80, 260, 40]  # position du bouton reseau
 posdessin = [width/2-100, height/2, 200, 40]  # position du bouton dessin
 
 #helps
-texthelpmenu=smallfont.render('?', True, color)
+texthelpmenu=smallfont.render('?', True, colortext)
 poshelpmenu=[width*7/8, height*7/8, 50, 40]
 # retourMenu
-textretour=smallfont.render('Retour', True, color)
+textretour=smallfont.render('Retour', True, colortext)
 posretour = [width/2-70, height/2+80, 140, 40]
 
 # Reseau
-textentrainer=smallfont.render('Entrainer le réseau', True, color)
-textcreer=smallfont.render('Créer les composantes', True, color)
-textvoirgraph=smallfont.render('Afficher le réseau', True, color)
+textentrainer=smallfont.render('Entrainer le réseau', True, colortext)
+textcreer=smallfont.render('Créer les composantes', True, colortext)
+textvoirgraph=smallfont.render('Afficher le réseau', True, colortext)
 
 posentrainer = [width/2-150, height/2, 300, 40]
 poscreer= [width/2-180, height/2-160, 360, 40]
-posvoirgraph = [width/2-150, height/2-80, 300, 40]
+posvoirgraph = [width/2-140, height/2-80, 280, 40]
 
 # Dessin
-textfichier=smallfont.render('Modifier image', True, color)
-texttest1=smallfont.render('Test réseau utilisateur', True, color)
-texttest2=smallfont.render('Test réseau préentrainé', True, color)
+textfichier=smallfont.render('Modifier image', True, colortext)
+texttest1=smallfont.render('Test réseau utilisateur', True, colortext)
+texttest2=smallfont.render('Test réseau préentrainé', True, colortext)
 
 posfichier=[width/2-130, height/2-160, 260, 40]
 postest1=[width/2-174, height/2, 350, 40]
@@ -137,16 +137,16 @@ while (True):
 				elif posdessin[0] <= mouse[0] <= posdessin[0]+posdessin[2] and posdessin[1] <= mouse[1] <= posdessin[1]+posdessin[3]:
 					dessin = True
 					menu = False
-					screenmain.fill((255, 255, 255))
+					screenmain.fill(color)
      
 				elif poshelpmenu[0] <= mouse[0] <= poshelpmenu[0]+poshelpmenu[2] and poshelpmenu[1] <= mouse[1] <= poshelpmenu[1]+poshelpmenu[3]:
 					msg = 'Le bouton \"Créer un réseau\" permet à l\'utilisateur de choisir la structure et entrainer un réseau qui identifie visuellement les chiffres à parir d\'une image.\nLe bouton \"Test dessin\" permet à l\'utilisateur d\'essayer son réseau ou celui préentrainer pour l\'indentification de chiffres.'
-					tkinter_messages.show_info_box()
+					showinfo(title='Information', message=msg)
 			elif ev.type == pygame.MOUSEBUTTONUP:
 					if posreseau[0] <= mouse[0] <= posreseau[0]+posreseau[2] and posreseau[1] <= mouse[1] <= posreseau[1]+posreseau[3]:
 						reseau = True
 						menu = False
-						screenmain.fill((255, 255, 255))
+						screenmain.fill(color)
      
  
     	# updates the frames of the game
@@ -168,7 +168,7 @@ while (True):
 				if posretour[0] <= mouse[0] <= posretour[0]+posretour[2] and posretour[1] <= mouse[1] <= posretour[1]+posretour[3]:
 						menu=True
 						dessin=False
-						screenmain.fill((255, 255, 255))
+						screenmain.fill(color)
 				elif posfichier[0] <= mouse[0] <= posfichier[0]+posfichier[2] and posfichier[1] <= mouse[1] <= posfichier[1]+posfichier[3]:
 					subprocess.call(['mspaint', 'image.png'])
 				elif postest1[0] <= mouse[0] <= postest1[0]+postest1[2] and postest1[1] <= mouse[1] <= postest1[1]+postest1[3]:
@@ -209,7 +209,7 @@ while (True):
 				if posretour[0] <= mouse[0] <= posretour[0]+posretour[2] and posretour[1] <= mouse[1] <= posretour[1]+posretour[3]:
 						menu=True
 						reseau=False
-						screenmain.fill((255, 255, 255))
+						screenmain.fill(color)
 				elif poscreer[0] <= mouse[0] <= poscreer[0]+poscreer[2] and poscreer[1] <= mouse[1] <= poscreer[1]+poscreer[3]:
 					type,nbneuronnes=choixreseau.getinfo()
 					if nbneuronnes != 0:
