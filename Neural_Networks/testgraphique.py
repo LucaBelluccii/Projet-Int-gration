@@ -124,7 +124,7 @@ while (True):
 				quit()
 				
 			# checks if a mouse is clicked
-			if ev.type == pygame.MOUSEBUTTONUP:
+			if ev.type == pygame.MOUSEBUTTONDOWN:
 
 				# if the mouse is clicked on the
 				# button the game is terminated
@@ -134,15 +134,16 @@ while (True):
 					dessin = True
 					menu = False
 					screenmain.fill((255, 255, 255))
-
-				elif posreseau[0] <= mouse[0] <= posreseau[0]+posreseau[2] and posreseau[1] <= mouse[1] <= posreseau[1]+posreseau[3]:
-					reseau = True
-					menu = False
-					screenmain.fill((255, 255, 255))
      
 				elif poshelpmenu[0] <= mouse[0] <= poshelpmenu[0]+poshelpmenu[2] and poshelpmenu[1] <= mouse[1] <= poshelpmenu[1]+poshelpmenu[3]:
 					msg = 'Le bouton \"Créer un réseau\" permet à l\'utilisateur de choisir la structure et entrainer un réseau qui identifie visuellement les chiffres à parir d\'une image.\nLe bouton \"Test dessin\" permet à l\'utilisateur d\'essayer son réseau ou celui préentrainer pour l\'indentification de chiffres.'
 					showinfo(title='Information', message=msg)
+			elif ev.type == pygame.MOUSEBUTTONUP:
+					if posreseau[0] <= mouse[0] <= posreseau[0]+posreseau[2] and posreseau[1] <= mouse[1] <= posreseau[1]+posreseau[3]:
+						reseau = True
+						menu = False
+						screenmain.fill((255, 255, 255))
+     
  
     	# updates the frames of the game
 		pygame.display.update()
@@ -157,7 +158,7 @@ while (True):
 			if ev.type == pygame.QUIT:
 				quit()
 				
-			if ev.type == pygame.MOUSEBUTTONUP:
+			if ev.type == pygame.MOUSEBUTTONDOWN:
 			
 				if posretour[0] <= mouse[0] <= posretour[0]+posretour[2] and posretour[1] <= mouse[1] <= posretour[1]+posretour[3]:
 						menu=True
@@ -196,7 +197,7 @@ while (True):
 			if ev.type == pygame.QUIT:
 				quit()
 				
-		if ev.type == pygame.MOUSEBUTTONUP:
+		if ev.type == pygame.MOUSEBUTTONDOWN:
 			
 				if posretour[0] <= mouse[0] <= posretour[0]+posretour[2] and posretour[1] <= mouse[1] <= posretour[1]+posretour[3]:
 						menu=True
