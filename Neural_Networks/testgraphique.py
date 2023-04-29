@@ -8,23 +8,6 @@ import tkinter_messages
 import util
 import pickle as pkl
 
-def bouton_quit(xy, text, shades, screen):
-
-    # stores the (x,y) coordinates into
-	# the variable as a tuple
-	mouse = pygame.mouse.get_pos()
-
-	# if mouse is hovered on a button it
-	# changes to lighter shade
-	if xy[0] <= mouse[0] <= xy[0]+xy[2] and xy[1] <= mouse[1] <= xy[1]+xy[3]:
-		pygame.draw.rect(screen, shades[0], xy)
-
-	else:
-		pygame.draw.rect(screen, shades[1], xy)
-
-	# superimposing the text onto our button
-	screen.blit(text, (xy[0]+40, xy[1]+5))
-
 
 def bouton(xy, text, shades, screen):
     mouse = pygame.mouse.get_pos()
@@ -74,7 +57,7 @@ shades = [color_light, color_dark]
 
 
 # Menu
-textquit = smallfont.render('Quit', True, colortext)
+textquit = smallfont.render('Quitter', True, colortext)
 textreseau = smallfont.render('Créer un réseau', True, colortext)
 textdessin = smallfont.render('Test dessin', True, colortext)
 
@@ -115,7 +98,7 @@ while (True):
 
 	while (menu):
 
-		bouton_quit(posquit, textquit, shades, screenmain)
+		bouton(posquit, textquit, shades, screenmain)
 		bouton(posreseau, textreseau, shades, screenmain)
 		bouton(posdessin, textdessin, shades, screenmain)
 		bouton(poshelpmenu,texthelpmenu,shades,screenmain)
@@ -141,7 +124,7 @@ while (True):
 					screenmain.fill(color)
      
 				elif poshelpmenu[0] <= mouse[0] <= poshelpmenu[0]+poshelpmenu[2] and poshelpmenu[1] <= mouse[1] <= poshelpmenu[1]+poshelpmenu[3]:
-					tkinter_messages.show_info_box()
+					tkinter_messages.show_info_box(1)
 			elif ev.type == pygame.MOUSEBUTTONUP:
 					if posreseau[0] <= mouse[0] <= posreseau[0]+posreseau[2] and posreseau[1] <= mouse[1] <= posreseau[1]+posreseau[3]:
 						reseau = True
@@ -176,9 +159,8 @@ while (True):
 				elif postest2[0] <= mouse[0] <= postest2[0]+postest2[2] and postest2[1] <= mouse[1] <= postest2[1]+postest2[3]:
 					paint.run(2)
 				elif poshelpmenu[0] <= mouse[0] <= poshelpmenu[0]+poshelpmenu[2] and poshelpmenu[1] <= mouse[1] <= poshelpmenu[1]+poshelpmenu[3]:
-					print(1)
-					msg = 'Le bouton \"Modifier image\" permet à l\'utilisateur de changer l\'image à indentifier (l\'image doit être font noir avec un chiffre en blanc)\nLe bouton \"Test\" va identifier l\'image avec le réseau'
-					showinfo(title='Information', message=msg)
+					tkinter_messages.show_info_box(2)
+					
 				
 		
 
@@ -220,6 +202,5 @@ while (True):
 					util.lauch_visualisation(network)
      
 				elif poshelpmenu[0] <= mouse[0] <= poshelpmenu[0]+poshelpmenu[2] and poshelpmenu[1] <= mouse[1] <= poshelpmenu[1]+poshelpmenu[3]:
-					msg = 'Le bouton \"Créer les composantes\" permet à l\'utilisateur de choisir la structure du réseau neural à entrainer\nLe bouton \"Entrainer le réseau\" permet à l\'utilisateur d\'entrainer le réseau'
-					showinfo(title='Information', message=msg)
+					tkinter_messages.show_info_box(3)				
 		pygame.display.update()
