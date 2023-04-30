@@ -3,7 +3,6 @@ import subprocess
 import paint
 import choixreseau
 import test
-from tkinter.messagebox import showinfo
 import tkinter_messages
 import util
 import pickle as pkl

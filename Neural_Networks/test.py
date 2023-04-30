@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import pickle as pkl
 from BigBauss import *
+import tkinter as tk
 from tkinter.messagebox import showwarning
 
 def init_reseau(type,nbneuronnes):
@@ -40,14 +41,40 @@ def run(network):
     x_train = data_train[1:n]
     x_train = x_train / 255.0
 
-    
-        
-    
-        
+    #new coords pour graph
     x_plot=[]
     y_plot=[]
+    
+    try:
+    #window pour get nombre de cycles
+        global num
+        root= tk.Tk()
 
-    for n in range(100):   #cycles d'entrainement
+        canvas1 = tk.Canvas(root, width=400, height=300)
+        canvas1.pack()
+
+        entry1 = tk.Entry(root) 
+    
+        canvas1.create_window(200, 140, window=entry1)
+    
+        def get_num():  
+            global num 
+            num= int(entry1.get())
+            root.destroy()
+    
+        button1 = tk.Button(text='Get num', command=get_num)
+        canvas1.create_window(200, 180, window=button1)
+        
+    
+        root.mainloop()
+    except:
+        showwarning(title="HEY!!",message="Vous devez entrer un entier :(")
+        num=100
+        
+
+    print(num)
+
+    for n in range(num):   #cycles d'entrainement
         network.train(x = x_train,y = y_train)   #entrainer le réseau avec un facteur alpha de 0.1
         if(n%1)==0:
             x_plot.append(n)
@@ -58,3 +85,4 @@ def run(network):
     pkl.dump(network,open("big_bauss.pkl","wb"))
     plt.plot(x_plot,y_plot)
     plt.show()
+    
