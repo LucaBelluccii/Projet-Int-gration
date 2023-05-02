@@ -1,10 +1,9 @@
 import pygame
 import subprocess
 import paint
-import choixreseau
+import Boite_Creation_Reseau
 import test
-from tkinter.messagebox import showinfo
-import tkinter_messages
+import Boites_Info
 import util
 import pickle as pkl
 
@@ -124,7 +123,7 @@ while (True):
 					screenmain.fill(color)
      
 				elif poshelpmenu[0] <= mouse[0] <= poshelpmenu[0]+poshelpmenu[2] and poshelpmenu[1] <= mouse[1] <= poshelpmenu[1]+poshelpmenu[3]:
-					tkinter_messages.show_info_box(1)
+					Boites_Info.show_info_box(1)
 			elif ev.type == pygame.MOUSEBUTTONUP:
 					if posreseau[0] <= mouse[0] <= posreseau[0]+posreseau[2] and posreseau[1] <= mouse[1] <= posreseau[1]+posreseau[3]:
 						reseau = True
@@ -159,7 +158,7 @@ while (True):
 				elif postest2[0] <= mouse[0] <= postest2[0]+postest2[2] and postest2[1] <= mouse[1] <= postest2[1]+postest2[3]:
 					paint.run(2)
 				elif poshelpmenu[0] <= mouse[0] <= poshelpmenu[0]+poshelpmenu[2] and poshelpmenu[1] <= mouse[1] <= poshelpmenu[1]+poshelpmenu[3]:
-					tkinter_messages.show_info_box(2)
+					Boites_Info.show_info_box(2)
 					
 				
 		
@@ -193,7 +192,7 @@ while (True):
 						reseau=False
 						screenmain.fill(color)
 				elif poscreer[0] <= mouse[0] <= poscreer[0]+poscreer[2] and poscreer[1] <= mouse[1] <= poscreer[1]+poscreer[3]:
-					type,nbneuronnes=choixreseau.getinfo()
+					type,nbneuronnes=Boite_Creation_Reseau.getinfo()
 					if nbneuronnes != 0:
 						network = test.init_reseau(type,nbneuronnes)
 				elif posentrainer[0] <= mouse[0] <= posentrainer[0]+posentrainer[2] and posentrainer[1] <= mouse[1] <= posentrainer[1]+posentrainer[3]:
@@ -202,5 +201,5 @@ while (True):
 					util.lauch_visualisation(network)
      
 				elif poshelpmenu[0] <= mouse[0] <= poshelpmenu[0]+poshelpmenu[2] and poshelpmenu[1] <= mouse[1] <= poshelpmenu[1]+poshelpmenu[3]:
-					tkinter_messages.show_info_box(3)				
+					Boites_Info.show_info_box(3)				
 		pygame.display.update()
