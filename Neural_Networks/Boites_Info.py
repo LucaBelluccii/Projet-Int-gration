@@ -2,6 +2,10 @@ import tkinter as tk
 import tkinter.font as font
 
 
+"""
+Contient les boites d'informations ("?") de l'application
+"""
+
 def show_info_box(choix):
     root = tk.Tk()
     root.geometry('500x400')

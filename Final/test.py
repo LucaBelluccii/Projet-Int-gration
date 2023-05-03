@@ -28,7 +28,7 @@ def init_reseau(type,nbneuronnes):
 
 
 def run(network):
-    data = pd.read_csv('Neural_Networks/train.csv') #lire les données avec pandas (sourcée de Kaggle)
+    data = pd.read_csv('Final/train.csv') #lire les données avec pandas (sourcée de Kaggle)
     data = np.array(data)   #convertir en liste numpy
     m, n = data.shape   #dimensions des données
     np.random.shuffle(data)     #mélanger
@@ -82,7 +82,7 @@ def run(network):
             x_plot.append(n)
             y_plot.append(util.get_accuracy(util.get_predictions(network.feed_forward(x_test)),y_test))
     
-        if n%10==0:     #afficher les résultats tout les 50 cycles
+        if n%10==0:     #afficher les résultats tout les 10 cycles
             print("Epoch : ",(n+1), " , accuracy = ",util.get_accuracy(util.get_predictions(network.feed_forward(x_test)),y_test),"%")
     print("Précision finale : ",util.get_accuracy(util.get_predictions(network.feed_forward(x_test)),y_test),"%")
     pkl.dump(network,open("big_bauss.pkl","wb"))
