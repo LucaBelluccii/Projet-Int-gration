@@ -248,7 +248,7 @@ descente de gradient avec momentum
 ajoute une accélération a l'apprentissage pour converger plus rapidement
 """
             
-def gradient_descent_momentum(network,x,y,alpha=0.01,batch_size=16,momentum=0.9):
+def gradient_descent_momentum(network,x,y,alpha=0.1,batch_size=16,momentum=0.9):
         
     batches = math.ceil(y.size/batch_size)
         
@@ -322,7 +322,7 @@ se sert de la moyenne et variation des gradient
 surpasse beaucoup plus facilement les minimums locaux
 
 """        
-def adam(network,x,y,alpha=0.001,batch_size=0,beta1=0.9,beta2=0.999):
+def adam(network,x,y,alpha=0.01,batch_size=0,beta1=0.9,beta2=0.999):
     delta_biases,delta_weights = network.backprop(x,y)
         
     m_hat = []
