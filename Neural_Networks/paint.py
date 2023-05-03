@@ -5,6 +5,11 @@ import numpy as np
 from tkinter.messagebox import showinfo
 import math
 
+"""
+Donne la prédiction du réseau pour une image
+"""
+
+
 def run(num):
     
     if num==1:

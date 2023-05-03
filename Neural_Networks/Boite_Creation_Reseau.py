@@ -2,8 +2,16 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter.messagebox import showinfo
 
+############################################################
+"""
+Fichier responsable de la boite de création de réseau
+"""
+############################################################
 
 
+"""
+retourne les informations de création du réseau
+"""
 def getinfo():
     
     
@@ -11,6 +19,10 @@ def getinfo():
    
     return(typeres,nbneuronne.get())
 
+
+"""
+Boite de sélection
+"""
 def loop():
     global root
     global nblayer
@@ -33,12 +45,6 @@ def loop():
         msg = f'Vous avez choisi: {typeres} avec un réseau de configuration 784,{nbneuronne.get()},10'
         showinfo(title='Information', message=msg)
         
-        
-        
-    
-    
-
-
     # frame
     frame = ttk.Frame(root)
     frame.pack(padx=10, pady=10, fill='x', expand=True)
