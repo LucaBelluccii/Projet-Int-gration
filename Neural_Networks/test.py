@@ -72,8 +72,6 @@ def run(network):
         num=100
         
 
-    print(num)
-
     for n in range(num):   #cycles d'entrainement
         network.train(x = x_train,y = y_train)   #entrainer le réseau avec un facteur alpha de 0.1
         if(n%1)==0:
