@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import pickle as pkl
 from BigBauss import *
 import tkinter as tk
+import math
 from tkinter.messagebox import showwarning
 
 def init_reseau(type,nbneuronnes):
@@ -45,41 +46,45 @@ def run(network):
     x_plot=[]
     y_plot=[]
     
-    try:
+    
     #window pour get nombre de cycles
-        global num
-        root= tk.Tk()
+    global num
+    num = 1
+    root= tk.Tk()
+    root.title ("Nombre de cycles")
+    canvas1 = tk.Canvas(root, width=300, height=150)
+    canvas1.pack()
 
-        canvas1 = tk.Canvas(root, width=400, height=300)
-        canvas1.pack()
-
-        entry1 = tk.Entry(root) 
+    entry1 = tk.Entry(root) 
     
-        canvas1.create_window(200, 140, window=entry1)
+    canvas1.create_window(150, 60, window=entry1)
     
-        def get_num():  
-            global num 
-            num= int(entry1.get())
-            root.destroy()
+    def get_num():  
+        global num 
+        try:
+            num= abs(math.floor(float(entry1.get())))
+        except:
+            showwarning(title="HEY!!",message="spa un chiffre ça :(")
+            num=1
+        root.destroy()
     
-        button1 = tk.Button(text='Get num', command=get_num)
-        canvas1.create_window(200, 180, window=button1)
+    button1 = tk.Button(text='   OK   ', command=get_num)
+    canvas1.create_window(150, 80, window=button1)
         
     
-        root.mainloop()
-    except:
-        showwarning(title="HEY!!",message="Vous devez entrer un entier :(")
-        num=100
-        
-
-    for n in range(num):   #cycles d'entrainement
+    root.mainloop()
+    
+    
+    print("Précision initiale : ",util.get_accuracy(util.get_predictions(network.feed_forward(x_test)),y_test),"%")
+    for n in range(num+1):   #cycles d'entrainement
         network.train(x = x_train,y = y_train)   #entrainer le réseau avec un facteur alpha de 0.1
         if(n%1)==0:
             x_plot.append(n)
             y_plot.append(util.get_accuracy(util.get_predictions(network.feed_forward(x_test)),y_test))
     
         if n%10==0:     #afficher les résultats tout les 50 cycles
-            print("Epoch : ",n, " , accuracy = ",util.get_accuracy(util.get_predictions(network.feed_forward(x_test)),y_test))
+            print("Epoch : ",(n+1), " , accuracy = ",util.get_accuracy(util.get_predictions(network.feed_forward(x_test)),y_test),"%")
+    print("Précision finale : ",util.get_accuracy(util.get_predictions(network.feed_forward(x_test)),y_test),"%")
     pkl.dump(network,open("big_bauss.pkl","wb"))
     plt.plot(x_plot,y_plot)
     plt.show()
