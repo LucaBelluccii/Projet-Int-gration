@@ -1,4 +1,4 @@
-Dépendances : numpy et pandas
 
-commande:
-pip install numpy pandas
+
+dépendances:
+pip install numpy pandas matplotlib tkinter pygame

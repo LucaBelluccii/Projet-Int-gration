@@ -27,7 +27,7 @@ class Network:
         self.biases = [np.random.rand(neuron_counts[i],1)-0.5 for i in range(1,len(neuron_counts))]
     
     
-        if len(activations)==0:
+        if len(activations)==0: 
             #print("WARNING : no activation functions provided to network")
             activations = ["" for i in range(len(neuron_counts))]
     
