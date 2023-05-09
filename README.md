@@ -10,5 +10,9 @@ graphe.ipynb nécéssite l'extension jupyter de vs code (il faut séléctioner l
 
 version de python -> (3.10)
 
+versions des librairies
+
+
+
 Pour installer les dépendances:
-    pip install numpy pandas matplotlib tk pygame opencv-python
+    pip install numpy pandas matplotlib pygame opencv-python

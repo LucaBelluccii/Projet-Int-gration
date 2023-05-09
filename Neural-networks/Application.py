@@ -181,12 +181,12 @@ def run():
 		while reseau:
 		
 			
-	
-			bouton(posretour, textretour, shades, screenmain)
-			bouton(posentrainer,textentrainer,shades,screenmain)
-			bouton(poscreer,textcreer,shades,screenmain)
-			bouton(poshelpmenu,texthelpmenu,shades,screenmain)
-			bouton(posvoirgraph,textvoirgraph,shades,screenmain)
+			
+			bouton(posretour, textretour, shades, screenmain) 
+			bouton(posentrainer,textentrainer,shades,screenmain) 
+			bouton(poscreer,textcreer,shades,screenmain) 
+			bouton(poshelpmenu,texthelpmenu,shades,screenmain) 
+			bouton(posvoirgraph,textvoirgraph,shades,screenmain) 
 
 			mouse = pygame.mouse.get_pos()
 			for ev in pygame.event.get():

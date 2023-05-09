@@ -83,7 +83,7 @@ def run(network):
         root.destroy()
     
     button1 = tk.Button(text='   OK   ', command=get_num)
-    canvas1.create_window(150, 80, window=button1)
+    canvas1.create_window(150, 95, window=button1)
         
     
     root.mainloop()
