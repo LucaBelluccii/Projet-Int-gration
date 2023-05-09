@@ -6,6 +6,7 @@ import test
 import Boites_Info
 import util
 import pickle as pkl
+import os
 
 
 def bouton(xy, text, shades, screen):
@@ -22,6 +23,8 @@ def bouton(xy, text, shades, screen):
 def run():
 	#initialisation de pygame
 	pygame.init()
+
+	os.system('cls')
 
 	# résolution de l'appli
 	# NE PAS CHANGER (casse tout)

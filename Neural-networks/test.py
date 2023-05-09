@@ -42,7 +42,7 @@ def init_reseau(type,nbneuronnes):
 
 #teste le réseau
 def run(network):
-    data = pd.read_csv('Final/train.csv') #lire les données avec pandas (sourcée de Kaggle)
+    data = pd.read_csv('train.csv') #lire les données avec pandas (sourcée de Kaggle)
     data = np.array(data)   #convertir en liste numpy
     m, n = data.shape   #dimensions des données
     np.random.shuffle(data)     #mélanger
