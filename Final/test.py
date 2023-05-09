@@ -7,12 +7,26 @@ import tkinter as tk
 import math
 from tkinter.messagebox import showwarning
 
+
+"""
+Fichier pour l'initialisation et test d'un réseau 
+
+Utilisé par application
+
+"""
+
+
 def init_reseau(type,nbneuronnes):
     
+    #nettoyer les parametres d'utilisateur
     nbneuronnes = nbneuronnes.replace(".",",")
     nbneuronnes = nbneuronnes.replace(" ",",")
     nbneuronnes = nbneuronnes.replace("/",",")
+    
+    #réseau par défaut
     network = Network([784,16,16,10],optimizer=type)
+    
+    #essaie de créer le réseau selon les parametres d'utilisateur
     try:
         neuron_counts = [int(num) for num in (nbneuronnes.split(","))]
         if not 0 in neuron_counts and not 1 in neuron_counts:  
@@ -22,11 +36,11 @@ def init_reseau(type,nbneuronnes):
         network.feed_forward(np.random.randn(784,1))
     except:
         network = Network([784,16,16,10],optimizer=type)
-        showwarning(title="you dun fucked up",message="réseau invalide, structure changée pour la valeur par défaut (784,16,16,10)")
+        showwarning(title="you dun messed up",message="réseau invalide, structure changée pour la valeur par défaut (784,16,16,10)")
     
     return network
 
-
+#teste le réseau
 def run(network):
     data = pd.read_csv('Final/train.csv') #lire les données avec pandas (sourcée de Kaggle)
     data = np.array(data)   #convertir en liste numpy
@@ -42,7 +56,7 @@ def run(network):
     x_train = data_train[1:n]
     x_train = x_train / 255.0
 
-    #new coords pour graph
+    #liste de points pour graphe
     x_plot=[]
     y_plot=[]
     
@@ -74,6 +88,8 @@ def run(network):
     
     root.mainloop()
     
+    
+    #entrainement du réseau
     
     print("Précision initiale : ",util.get_accuracy(util.get_predictions(network.feed_forward(x_test)),y_test),"%")
     for n in range(num+1):   #cycles d'entrainement

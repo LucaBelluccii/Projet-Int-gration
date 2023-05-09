@@ -6,21 +6,31 @@ from tkinter.messagebox import showinfo
 import math
 
 """
-Donne la prédiction du réseau pour une image
+Donne la prédiction du réseau pour une image (image.png)
+
+L'image peut être éditée dans paint la taille doit demeurer 28x28 pixels
 """
 
 
 def run(num):
     
+    #charger le réseau 
+    
     if num==1:
         network = pkl.load(open("big_bauss.pkl","rb"))
     else:
         network = pkl.load(open("max_big_bauss.pkl","rb"))
+        
+        
+    #lire l'image avec opencv
     image = cv2.imread("image.png")
     image = cv2.cvtColor(image,cv2.COLOR_RGB2GRAY)
     image = np.array(image)/255
     
     
+    #centrer le chiffre dans l'image
+    
+    #coordonnées du chiffre
     ytop=0
     ybot=0
     xdroite=0
@@ -54,7 +64,7 @@ def run(num):
     x=mid[0]-14
     y=mid[1]-14
     
-    #déplacer l'image
+    #déplacer l'image (ajouter et enlever des lignes de pixels noirs)
     
     if y>0:
         image=image[y:28]
@@ -80,13 +90,14 @@ def run(num):
             image=np.vstack([[0 for j in range(28)],image])
     image=image.T
     
-    #show imgs
+    #afficher l'image
     
     plt.imshow(image)
     plt.show()
 
-
+    #"aplatir" l'image pour le réseau
     image = np.reshape(image,(784,1))
 
+    #afficher la prédiction
     msg = f'Le réseau pense que le chiffre est: {np.argmax(network.feed_forward(image))}'
     showinfo(title='Prédiction du réseau', message=msg)

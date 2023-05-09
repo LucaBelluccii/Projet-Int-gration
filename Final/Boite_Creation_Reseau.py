@@ -29,6 +29,7 @@ def loop():
     global nbneuronne
     global typeres
     
+    #fenetre
     root= tk.Tk()
     root.geometry("300x330")
     root.resizable(False, False)
@@ -50,7 +51,7 @@ def loop():
     frame.pack(padx=10, pady=10, fill='x', expand=True)
 
 
-    # type
+    # optimisateurs
     type_label = ttk.Label(frame, text="Optimisateur:")
     type_label.pack(fill='x', expand=True)
 

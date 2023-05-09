@@ -18,35 +18,34 @@ def bouton(xy, text, shades, screen):
 
     screen.blit(text, (xy[0]+20, xy[1]+5))
 
-
+#initialise et execute l'application
 def run():
-	# initializing the constructor
+	#initialisation de pygame
 	pygame.init()
 
-	# screen resolution
+	# résolution de l'appli
+	# NE PAS CHANGER (casse tout)
 	res = (720, 720)
 
-	# opens up a window
+	# fenetre pygame
 	screenmain = pygame.display.set_mode(res)
 	pygame.display.set_caption("Constructeur de réseau neural")
 
-	# color
+	# couleurs
 	color = "#185760"
 	colortext="#FFFFFF"
 
-	# shades
+	# tons de couleurs
 	color_light = (67, 71, 80)
 	color_dark = (37, 41, 50)
 
-	# stores the width of the
-	# screen into a variable
+	# largeur de l'écran
 	width = screenmain.get_width()
 
-	# stores the height of the
-	# screen into a variable
+	# hauteur de l'écran
 	height = screenmain.get_height()
 
-	# font
+	# police de texte
 	smallfont = pygame.font.SysFont('Corbel', 35)
 
 
@@ -64,7 +63,7 @@ def run():
 	posreseau = [width/2-130, height/2-80, 260, 40]  # position du bouton reseau
 	posdessin = [width/2-100, height/2, 200, 40]  # position du bouton dessin
 
-	#helps
+	#boutons aide (?)
 	texthelpmenu=smallfont.render('?', True, colortext)
 	poshelpmenu=[width*7/8, height*7/8, 50, 40]
 	# retourMenu
@@ -93,16 +92,19 @@ def run():
 	reseau = False
 	menu = True
 
+
+	#boucle principale de l'application
 	while (True):
 
+		#menu principal
 		while (menu):
 
 			bouton(posquit, textquit, shades, screenmain)
 			bouton(posreseau, textreseau, shades, screenmain)
 			bouton(posdessin, textdessin, shades, screenmain)
 			bouton(poshelpmenu,texthelpmenu,shades,screenmain)
-			# stores the (x,y) coordinates into
-			# the variable as a tuple
+			
+			#position de la souris
 			mouse = pygame.mouse.get_pos()
 
 			for ev in pygame.event.get():
@@ -110,11 +112,10 @@ def run():
 				if ev.type == pygame.QUIT:
 					quit()
 					
-				# checks if a mouse is clicked
+				#vérifie s'il y a eu un clic de souris
 				if ev.type == pygame.MOUSEBUTTONDOWN:
 
-					# if the mouse is clicked on the
-					# button the game is terminated
+					#vérifie la position du clic
 					if posquit[0] <= mouse[0] <= posquit[0]+posquit[2] and posquit[1] <= mouse[1] <= posquit[1]+posquit[3]:
 						quit()
 					elif posdessin[0] <= mouse[0] <= posdessin[0]+posdessin[2] and posdessin[1] <= mouse[1] <= posdessin[1]+posdessin[3]:
@@ -130,10 +131,9 @@ def run():
 							menu = False
 							screenmain.fill(color)
 		
-	
-			# updates the frames of the game
 			pygame.display.update()
 
+		#menu dessin
 		while dessin:
 			bouton(posfichier, textfichier, shades, screenmain)
 			bouton(posretour,textretour,shades,screenmain)
@@ -165,11 +165,16 @@ def run():
 
 			pygame.display.update()
 
+
+		#variables pour le menu réseau
 		type=""
 		nblayers=0
 		nbneuronnes=0
 		network =pkl.load(open("big_bauss.pkl","rb"))
 		activation =0
+  
+  
+		#menu création réseau
 		while reseau:
 		
 			
